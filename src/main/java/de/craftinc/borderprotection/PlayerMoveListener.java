@@ -21,39 +21,6 @@ public class PlayerMoveListener implements Listener
         this.borderManager = borderManager;
     }
 
-    /**
-     * Checks if the player is outside of one specific border.
-     *
-     * @param player  part of the player coordinates
-     * @param border1 one side of the rectangle
-     * @param border2 opposite side of the rectangle
-     * @return null if the player is inside, otherwise a new player location
-     */
-    private Double checkBorder( double player, double border1, double border2 )
-    {
-        double bigBorder = Math.max(border1, border2);
-        double smallBorder = Math.min(border1, border2);
-
-        // if player is between borders do nothing
-        if ( player >= smallBorder && player <= bigBorder )
-        {
-            return null;
-        }
-        else
-        {
-            if ( player > bigBorder )
-            {
-                // if player is outside of the bigBorder, teleport him to the bigBorder
-                return bigBorder - borderManager.getBuffer();
-            }
-            else
-            {
-                // if player is outside of the smallBorder, teleport him to the smallBorder
-                return smallBorder + borderManager.getBuffer();
-            }
-        }
-    }
-
     private Double goUpUntilFreeSpot( Player player )
     {
         // go up in height until the player can stand in AIR
@@ -82,14 +49,19 @@ public class PlayerMoveListener implements Listener
             return;
         }
 
-        // do nothing if there is no border defined
+        // do nothing if there are no border definitions at all
         if ( borderManager.getBorders() == null )
         {
             return;
         }
 
-        Location pl = e.getPlayer().getLocation();
+        // player location
+        Location playerLocation = e.getPlayer().getLocation();
+
+        // world where the player is in
         String worldName = e.getPlayer().getWorld().getName();
+
+        // borders of this world
         ArrayList<Location> borderPoints = borderManager.getBorders().get(worldName);
 
         // do nothing if there are no borders for this specific world
@@ -97,29 +69,30 @@ public class PlayerMoveListener implements Listener
             return;
 
         // change x or z. default: do not change
-        Double newX, newY, newZ;
+        Double[] newXZ;
 
-        newX = checkBorder(pl.getX(), borderPoints.get(0).getX(), borderPoints.get(1).getX());
-        newZ = checkBorder(pl.getZ(), borderPoints.get(0).getZ(), borderPoints.get(1).getZ());
+        // check if player is inside the borders. null if yes, otherwise a tuple which defines the new player position
+        newXZ = borderManager.checkBorder(playerLocation, borderPoints, borderManager.getBuffer());
 
         // Do nothing, if no new coordinates have been calculated.
-        if ( newX == null && newZ == null )
+        if ( newXZ == null )
         {
             return;
         }
 
         // if one of the coordinates is null, set it to the player's value
-        newX = newX == null ? pl.getX() : newX;
-        newZ = newZ == null ? pl.getZ() : newZ;
+        newXZ[0] = newXZ[0] == null ? playerLocation.getX() : newXZ[0];
+        newXZ[1] = newXZ[1] == null ? playerLocation.getZ() : newXZ[1];
 
         // change Y if necessary (when there is no free spot)
-        newY = goUpUntilFreeSpot(e.getPlayer());
+        Double newY = goUpUntilFreeSpot(e.getPlayer());
 
         // teleport the player to the new X and Z coordinates
         e.getPlayer().teleport(
-                new Location(e.getPlayer().getWorld(), newX, newY, newZ, pl.getYaw(), pl.getPitch()));
+                new Location(e.getPlayer().getWorld(), newXZ[0], newY, newXZ[1], playerLocation.getYaw(),
+                             playerLocation.getPitch()));
 
         // send a message to the player
-        e.getPlayer().sendMessage(Messages.borderMessage);
+        borderManager.showMessageWithTimeout(e.getPlayer(), Messages.borderMessage);
     }
 }

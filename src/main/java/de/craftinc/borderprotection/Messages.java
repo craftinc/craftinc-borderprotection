@@ -37,15 +37,22 @@ public class Messages
         return sb.toString();
     }
 
+    private static String borderExplanation =
+            "One day the holy mods and administrators will expand the border. It is then your mission to explore " +
+            "strange new worlds, to seek out new life and new civilizations, to boldly go where no one has gone before.";
+
     public static String borderMessage =
-            "Sorry Dude! This is the border... the final frontier! One day the holy mods " +
-            "and administrators will expand the border. It is then your mission to explore " +
-            "strange new worlds, to seek out new life and new civilizations, to boldly go " +
-            "where no one has gone before.";
+            "Sorry Dude! This is the border... the final frontier! " + borderExplanation + NEWLINE +
+            makeCmd("/cibp get", "shows the borders of the current world");
+
+    public static String borderTeleportMessage =
+            "Sorry Dude! You cannot teleport outside the border. " + borderExplanation + NEWLINE +
+            makeCmd("/cibp get", "shows the borders of the current world");
 
     public static String helpGeneral =
             ChatColor.GREEN + "CraftInc BorderProtection - Usage:" + NEWLINE +
             makeCmd("help", "shows this help") +
+            makeCmd("get | info", "shows the borders of the current world") +
             makeCmd("set", "Border rectangle edges will be this far away from point of origin.", "<integer>") +
             makeCmd("set", "Border rectangle is defined by the two points. A point is specified as: x,z",
                     "<point1>", "<point2>");
@@ -56,7 +63,7 @@ public class Messages
     public static String borderInfo( String worldName, String borderDef )
     {
 
-        return ChatColor.WHITE + "Border definition of world " +
+        return ChatColor.WHITE + "Borders of world " +
                ChatColor.YELLOW + worldName +
                ChatColor.WHITE + ": " +
                ChatColor.YELLOW + borderDef;

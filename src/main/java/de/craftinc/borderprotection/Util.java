@@ -17,6 +17,11 @@ public class Util
         for ( Object jsonEntry : json.toArray() )
         {
             JSONObject j = (JSONObject) jsonEntry;
+//            // check if border for this world is enabled. continue if not
+//            String enabled = (String) j.get("enabled");
+//            if (enabled != "1") {
+//                continue;
+//            }
             String worldname = (String) j.get("worldname");
             ArrayList<Location> locations = new ArrayList<Location>();
             JSONArray borderPoints = (JSONArray) j.get("borderPoints");
@@ -32,18 +37,20 @@ public class Util
             data.put(worldname, locations);
         }
 
-        if (data.size() > 0) {
+        if ( data.size() > 0 )
+        {
             return data;
         }
 
         return null;
     }
 
-    public static JSONArray encodeJSON( HashMap<String,ArrayList<Location>> data )
+    public static JSONArray encodeJSON( HashMap<String, ArrayList<Location>> data )
     {
         JSONArray json = new JSONArray();
         int i = 0;
-        for (ArrayList<Location> border: data.values()) {
+        for ( ArrayList<Location> border : data.values() )
+        {
 
             // add point 1 as json array
             JSONArray point1 = new JSONArray();
@@ -62,15 +69,19 @@ public class Util
 
             // Add points and worldname to world json object
             JSONObject borderOfAWorld = new JSONObject();
-            try {
+            try
+            {
                 borderOfAWorld.put("worldname", border.get(0).getWorld().getName());
                 borderOfAWorld.put("borderPoints", points);
                 json.add(i, borderOfAWorld);
                 i++;
             }
-            catch (NullPointerException e) {
-                if (border.get(0).getWorld() == null) {
-                    Plugin.getPlugin().getLogger().warning("A world is null. Ignoring this border (not saving this border).");
+            catch ( NullPointerException e )
+            {
+                if ( border.get(0).getWorld() == null )
+                {
+                    Plugin.getPlugin().getLogger()
+                          .warning("A world is null. Ignoring this border (not saving this border).");
                 }
             }
         }

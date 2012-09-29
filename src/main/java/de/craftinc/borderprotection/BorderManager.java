@@ -2,10 +2,12 @@ package de.craftinc.borderprotection;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class BorderManager
@@ -25,15 +27,21 @@ public class BorderManager
     private HashMap<String, ArrayList<Location>> borders = null;
 
     /**
-     * the buffer in blocks which applies when a player is teleported inside the border. 0 means the player
+     * For every player save the time when he got the last borderMessage
+     */
+    public HashMap<String, Long> lastBorderMessage = new HashMap<String, Long>();
+
+    /**
+     * The buffer in blocks which applies when a player is teleported inside the border. 0 means the player
      * will be teleported directly to the border.
      */
     private double buffer = 0.5;
 
-    public Serializer getSerializer()
-    {
-        return serializer;
-    }
+    /**
+     * A timeout for the border message. When a player tries to cross the border and sees the border message,
+     * the earliest possible time the message will show up again is after <code>timeout</code> milliseconds.
+     */
+    private Long timeout = 10000L;
 
     /**
      * Serializer, which is used for loading and saving data to harddisk
@@ -59,9 +67,19 @@ public class BorderManager
      * **********************************************************
      */
 
+    public Serializer getSerializer()
+    {
+        return serializer;
+    }
+
     public double getBuffer()
     {
         return buffer;
+    }
+
+    public Long getTimeout()
+    {
+        return timeout;
     }
 
     public HashMap<String, ArrayList<Location>> getBorders()
@@ -102,5 +120,90 @@ public class BorderManager
         }
 
         borders.put(worldName, locations);
+    }
+
+
+    /**
+     * Checks if the given location is inside the border rectangle. Returns null if yes, otherwise new coordinates.
+     *
+     * @param location     location to check
+     * @param borderPoints points which define the border rectangle
+     * @param buffer       if the player will be teleported back, then he will be <code>buffer</code> far away
+     *                     from the border he tried to cross
+     * @return null if the player is inside, otherwise a new player location
+     */
+    public Double[] checkBorder( Location location, ArrayList<Location> borderPoints, double buffer )
+    {
+        // New x and z: null by default
+        Double[] newXZ = { null, null };
+
+        // check if player is withing the X borders
+        newXZ[0] = _checkBorder(location.getX(), borderPoints.get(0).getX(), borderPoints.get(1).getX(), buffer);
+        // check if player is withing the Z borders
+        newXZ[1] = _checkBorder(location.getZ(), borderPoints.get(0).getZ(), borderPoints.get(1).getZ(), buffer);
+
+        // Do nothing, if no new coordinates have been calculated.
+        if ( newXZ[0] == null && newXZ[1] == null )
+        {
+            return null;
+        }
+        return newXZ;
+    }
+
+
+    /**
+     * Checks if the given location is between one specific border pair.
+     *
+     * @param location part of the location coordinates
+     * @param border1  one side of the rectangle
+     * @param border2  opposite side of the rectangle
+     * @return null if the location is inside, otherwise a new location
+     */
+    public Double _checkBorder( double location, double border1, double border2, double buffer )
+    {
+        double bigBorder = Math.max(border1, border2);
+        double smallBorder = Math.min(border1, border2);
+
+        // if location is between borders do nothing
+        if ( location >= smallBorder && location <= bigBorder )
+        {
+            return null;
+        }
+        else
+        {
+            if ( location > bigBorder )
+            {
+                // if location is outside of the bigBorder, teleport to the bigBorder
+                return bigBorder - buffer;
+            }
+            else
+            {
+                // if location is outside of the smallBorder, teleport to the smallBorder
+                return smallBorder + buffer;
+            }
+        }
+    }
+
+
+    /**
+     * Show the border message to a player and respect the timeout.
+     *
+     * @param player Player who will see the border message.
+     */
+    public void showMessageWithTimeout( Player player, String message )
+    {
+        // get the current time
+        Long now = Calendar.getInstance().getTimeInMillis();
+
+        if ( ( lastBorderMessage.get(player.getName()) != null &&
+               now - getTimeout() > lastBorderMessage.get(player.getName()) ) ||
+             lastBorderMessage.get(player.getName()) == null )
+        {
+            // show message
+            player.sendMessage(message);
+
+            // set last sent message for this player to now
+            lastBorderMessage.put(player.getName(), now);
+        }
     }
 }

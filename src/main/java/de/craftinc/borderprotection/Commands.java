@@ -74,7 +74,7 @@ public class Commands implements CommandExecutor
                 }
 
                 ArrayList<Location> borderPoints = borderManager.getBorders()
-                                                         .get(worldName);
+                                                                .get(worldName);
                 String borderDef = borderPoints.get(0).getX() + "," + borderPoints.get(0).getZ() + " " +
                                    borderPoints.get(1).getX() + "," + borderPoints.get(1).getZ();
 
