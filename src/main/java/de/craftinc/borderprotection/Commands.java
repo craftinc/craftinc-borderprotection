@@ -22,6 +22,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
+
 public class Commands implements CommandExecutor
 {
     private BorderManager borderManager;
@@ -54,22 +56,25 @@ public class Commands implements CommandExecutor
             // set
             if ( ( args.length == 2 || args.length == 3 ) && args[0].equalsIgnoreCase("set") )
             {
-                if ( ! sender.hasPermission("craftinc.borderprotection.set") )
+                if ( !sender.hasPermission("craftinc.borderprotection.set") )
                 {
                     sender.sendMessage(Messages.noPermissionSet);
                     return false;
                 }
+                // set <distance>
                 if ( args.length == 2 )
                 {
                     try
                     {
                         borderManager.setBorder(( (Player) sender ).getWorld(), Double.parseDouble(args[1]));
+                        sender.sendMessage(Messages.borderCreationSuccessful);
                     }
                     catch ( Exception e )
                     {
                         sender.sendMessage(e.getMessage());
                     }
                 }
+                // set <point1> <point2>
                 else
                 {
                     try
@@ -83,7 +88,14 @@ public class Commands implements CommandExecutor
                 }
 
                 // save the new border
-                Border.saveBorders();
+                try
+                {
+                    Border.saveBorders();
+                }
+                catch ( IOException e )
+                {
+                    sender.sendMessage(Messages.borderSaveException);
+                }
                 return true;
             }
 
@@ -93,7 +105,7 @@ public class Commands implements CommandExecutor
                 World world = ( (Player) sender ).getWorld();
 
                 // exit and send the player a message if no border is set
-                if ( ! Border.getBorders().containsKey(world) )
+                if ( !Border.getBorders().containsKey(world) )
                 {
                     sender.sendMessage(Messages.borderInfoNoBorderSet);
                     return true;
@@ -104,7 +116,33 @@ public class Commands implements CommandExecutor
                 sender.sendMessage(Messages.borderInfo(world.getName(), border.toString()));
                 return true;
             }
+
+            // on
+            if ( args.length == 1 && ( args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("off") ) )
+            {
+                World world = ( (Player) sender ).getWorld();
+                if (args[0].equalsIgnoreCase("on")) {
+                    Border.getBorders().get(world).enable();
+                    sender.sendMessage(Messages.borderEnabled);
+                } else {
+                    Border.getBorders().get(world).disable();
+                    sender.sendMessage(Messages.borderDisabled);
+                }
+
+                // save the new border
+                try
+                {
+                    Border.saveBorders();
+                }
+                catch ( IOException e )
+                {
+                    sender.sendMessage(Messages.borderEnableDisableException);
+                }
+                return true;
+            }
         }
+
+        sender.sendMessage(Messages.helpGeneral);
         return false;
     }
 }

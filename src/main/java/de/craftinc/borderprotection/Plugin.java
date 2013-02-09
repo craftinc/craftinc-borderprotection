@@ -16,6 +16,7 @@
 */
 package de.craftinc.borderprotection;
 
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -26,6 +27,12 @@ public class Plugin extends JavaPlugin
     public static JavaPlugin getPlugin()
     {
         return cibpPlugin;
+    }
+
+    @Override
+    public void onLoad()
+    {
+        ConfigurationSerialization.registerClass(Border.class);
     }
 
     @Override

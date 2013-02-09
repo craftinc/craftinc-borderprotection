@@ -73,6 +73,11 @@ public class Messages
             makeCmd("set", "Border rectangle is defined by the two points. A point is specified as: x,z",
                     "<point1>", "<point2>");
 
+    public static String borderCreationSuccessful
+            = ChatColor.YELLOW + "New border was set " +
+              ChatColor.GREEN + "successfully" +
+              ChatColor.YELLOW + "!";
+
     public static String commandIssuedByNonPlayer
             = ChatColor.RED + "Only a player can use CraftInc BorderProtection commands!";
 
@@ -90,4 +95,16 @@ public class Messages
 
     public static String noPermissionSet =
             ChatColor.RED + "Sorry, you don't have permission to set the border.";
+
+    public static String borderEnabled =
+            ChatColor.YELLOW + "Border enabled.";
+
+    public static String borderDisabled =
+            ChatColor.YELLOW + "Border disabled.";
+
+    public static String borderSaveException =
+            ChatColor.RED + "Error: Could not save border on server. After the next reload this border will be lost!";
+
+    public static String borderEnableDisableException =
+            ChatColor.RED + "Error: Could not save border state on server. After the next reload this border state will be lost!";
 }

@@ -74,14 +74,21 @@ public class PlayerMoveListener implements Listener
         Location playerLocation = e.getPlayer().getLocation();
 
         // world where the player is in
-        World world= e.getPlayer().getWorld();
+        World world = e.getPlayer().getWorld();
 
         // border of this world
         Border border = Border.getBorders().get(world);
 
         // do nothing if there are no borders for this specific world
         if ( border == null )
+        {
             return;
+        }
+
+        if ( !border.isActive() )
+        {
+            return;
+        }
 
         // change x or z. default: do not change
         Double[] newXZ;

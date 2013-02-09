@@ -4,20 +4,29 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Border
+public class Border implements ConfigurationSerializable
 {
-    private static final String dataFileName = "borders.json";
+    private static final String dataFileName = "borders.yml";
+
+
+    private Boolean isActive;
+    private static String isActiveKey = "enabled";
 
     private Location rectPoint1;
-    private Location rectPoint2;
-
     private static String rectPoint1Name = "p1";
+
+    private Location rectPoint2;
     private static String rectPoint2Name = "p2";
+
+
     private static String rectBordersKey = "rectBorders";
 
     private static final HashMap<World, Border> borders = new HashMap<World, Border>();
@@ -40,13 +49,20 @@ public class Border
         return rectPoint2;
     }
 
-    @SuppressWarnings("unchecked")
+    public Boolean isActive()
+    {
+        return isActive;
+    }
+
+    @SuppressWarnings("unchecked unused")
     public Border( Map<String, Object> map )
     {
         try
         {
             rectPoint1 = LocationSerializer.deserializeLocation((Map<String, Object>) map.get(rectPoint1Name));
             rectPoint2 = LocationSerializer.deserializeLocation((Map<String, Object>) map.get(rectPoint2Name));
+
+            isActive = (Boolean) map.get(isActiveKey);
 
             if ( rectPoint1.getWorld().equals(rectPoint2.getWorld()) )
             {
@@ -67,6 +83,10 @@ public class Border
     {
         rectPoint1 = p1;
         rectPoint2 = p2;
+
+        // new border is active by default
+        isActive = true;
+
         if ( rectPoint1.getWorld().equals(rectPoint2.getWorld()) )
         {
             borders.put(rectPoint1.getWorld(), this);
@@ -78,11 +98,15 @@ public class Border
     }
 
 
+    @SuppressWarnings("unused")
     public Map<String, Object> serialize()
     {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put(rectPoint1Name, LocationSerializer.serializeLocation(rectPoint1));
         map.put(rectPoint2Name, LocationSerializer.serializeLocation(rectPoint2));
+        map.put(isActiveKey, isActive);
+
+        System.out.println(map);
 
         return map;
     }
@@ -92,13 +116,24 @@ public class Border
         bordersFileConf.getList(rectBordersKey);
     }
 
-    public static void saveBorders()
+    public static void saveBorders() throws IOException
     {
-        bordersFileConf.set(rectBordersKey, borders.values());
+        bordersFileConf.set(rectBordersKey, new ArrayList<Object>(borders.values()));
+        bordersFileConf.save(bordersFile);
     }
 
     public String toString()
     {
         return rectPoint1.getX() + "," + rectPoint1.getZ() + " " + rectPoint2.getX() + "," + rectPoint2.getZ();
+    }
+
+    public void enable()
+    {
+        isActive = true;
+    }
+
+    public void disable()
+    {
+        isActive = false;
     }
 }

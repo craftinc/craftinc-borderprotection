@@ -62,6 +62,11 @@ public class PlayerTeleportListener implements Listener
             return;
         }
 
+        if ( !border.isActive() )
+        {
+            return;
+        }
+
         // change x or z. default: do not change
         Double[] newXZ;
 
