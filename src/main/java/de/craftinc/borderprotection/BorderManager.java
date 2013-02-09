@@ -20,9 +20,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -34,13 +31,6 @@ public class BorderManager
      * **********************************************************
      */
 
-    private final String dataFileName = "data.json";
-
-    /**
-     * Borders of all Worlds. String is World.getName(). Location is one point of the border. A border
-     * consists of two points which create a rectangle.
-     */
-    private HashMap<String, ArrayList<Location>> borders = null;
 
     /**
      * For every player save the time when he got the last borderMessage
@@ -51,18 +41,14 @@ public class BorderManager
      * The buffer in blocks which applies when a player is teleported inside the border. 0 means the player
      * will be teleported directly to the border.
      */
-    private double buffer = 0.5;
+    public static final double buffer = 0.5;
 
     /**
      * A timeout for the border message. When a player tries to cross the border and sees the border message,
      * the earliest possible time the message will show up again is after <code>timeout</code> milliseconds.
      */
-    private Long timeout = 10000L;
+    public static final Long timeout = 10000L;
 
-    /**
-     * Serializer, which is used for loading and saving data to harddisk
-     */
-    private Serializer serializer;
 
     /**
      * *********************************************************
@@ -71,9 +57,8 @@ public class BorderManager
      */
     public BorderManager()
     {
-        // initialize Serializer and load data file
-        serializer = new Serializer(new File(Plugin.getPlugin().getDataFolder(), dataFileName));
-        borders = serializer.loadDataFile();
+        // load borders
+        Border.loadBorders();
     }
 
 
@@ -83,59 +68,21 @@ public class BorderManager
      * **********************************************************
      */
 
-    public Serializer getSerializer()
+    public void setBorder( World world, double border ) throws Exception
     {
-        return serializer;
+        new Border(new Location(world, border, 0, border), new Location(world, -border, 0, -border));
     }
 
-    public double getBuffer()
+    public void setBorder( World world, String p1, String p2 ) throws Exception
     {
-        return buffer;
-    }
 
-    public Long getTimeout()
-    {
-        return timeout;
-    }
+        String[] coordinatesP1 = p1.split(",");
+        Location l1 = new Location(world, Double.parseDouble(coordinatesP1[0]), 0, Double.parseDouble(coordinatesP1[1]));
 
-    public HashMap<String, ArrayList<Location>> getBorders()
-    {
-        return borders;
-    }
+        String[] coordinatesP2 = p2.split(",");
+        Location l2 = new Location(world, Double.parseDouble(coordinatesP2[0]), 0, Double.parseDouble(coordinatesP2[1]));
 
-    public void setBorder( String worldName, double border )
-    {
-        if ( borders == null )
-        {
-            borders = new HashMap<String, ArrayList<Location>>();
-        }
-
-        World world = Plugin.getPlugin().getServer().getWorld(worldName);
-
-        // set two points which define a square
-        borders.put(worldName, new ArrayList<Location>(Arrays.asList(
-                new Location(world, border, 0, border),
-                new Location(world, -border, 0, -border)
-                                                                    )));
-    }
-
-    public void setBorder( String worldName, String[] borderPoints )
-    {
-        if ( borders == null )
-        {
-            borders = new HashMap<String, ArrayList<Location>>();
-        }
-
-        ArrayList<Location> locations = new ArrayList<Location>();
-        World world = Plugin.getPlugin().getServer().getWorld(worldName);
-
-        for ( String borderPoint : borderPoints )
-        {
-            String[] point = borderPoint.split(",");
-            locations.add(new Location(world, Double.parseDouble(point[0]), 0, Double.parseDouble(point[1])));
-        }
-
-        borders.put(worldName, locations);
+        new Border(l1, l2);
     }
 
 
@@ -143,20 +90,20 @@ public class BorderManager
      * Checks if the given location is inside the border rectangle. Returns null if yes, otherwise new coordinates.
      *
      * @param location     location to check
-     * @param borderPoints points which define the border rectangle
+     * @param border       Border object which defines the border
      * @param buffer       if the player will be teleported back, then he will be <code>buffer</code> far away
      *                     from the border he tried to cross
      * @return null if the player is inside, otherwise a new player location
      */
-    public Double[] checkBorder( Location location, ArrayList<Location> borderPoints, double buffer )
+    public Double[] checkBorder( Location location, Border border, double buffer )
     {
         // New x and z: null by default
         Double[] newXZ = { null, null };
 
         // check if player is withing the X borders
-        newXZ[0] = _checkBorder(location.getX(), borderPoints.get(0).getX(), borderPoints.get(1).getX(), buffer);
+        newXZ[0] = _checkBorder(location.getX(), border.getRectPoint1().getX(), border.getRectPoint2().getX(), buffer);
         // check if player is withing the Z borders
-        newXZ[1] = _checkBorder(location.getZ(), borderPoints.get(0).getZ(), borderPoints.get(1).getZ(), buffer);
+        newXZ[1] = _checkBorder(location.getZ(), border.getRectPoint1().getZ(), border.getRectPoint2().getZ(), buffer);
 
         // Do nothing, if no new coordinates have been calculated.
         if ( newXZ[0] == null && newXZ[1] == null )
@@ -212,7 +159,7 @@ public class BorderManager
         Long now = Calendar.getInstance().getTimeInMillis();
 
         if ( ( lastBorderMessage.get(player.getName()) != null &&
-               now - getTimeout() > lastBorderMessage.get(player.getName()) ) ||
+               now - timeout > lastBorderMessage.get(player.getName()) ) ||
              lastBorderMessage.get(player.getName()) == null )
         {
             // show message

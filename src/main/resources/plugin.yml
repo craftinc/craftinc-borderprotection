@@ -14,9 +14,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-name: CraftincBorderProtection
+name: Craft Inc. BorderProtection
 main: de.craftinc.borderprotection.Plugin
-version: 0.9.9
+version: 1.0.0
 author: ddidderr
 website: http://www.craftinc.de/plugins/borderprotection
 
@@ -27,8 +27,8 @@ commands:
 
 permissions:
   craftinc.borderprotection.set:
-    default: false
+    default: op
     description: Allows to set the border for a world.
   craftinc.borderprotection.ignoreborders:
-    default: false
+    default: op
     description: Allows to be everywhere on the map (ignoring the borders).

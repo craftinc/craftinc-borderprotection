@@ -16,13 +16,11 @@
 */
 package de.craftinc.borderprotection;
 
-import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
 
 public class Commands implements CommandExecutor
 {
@@ -56,45 +54,54 @@ public class Commands implements CommandExecutor
             // set
             if ( ( args.length == 2 || args.length == 3 ) && args[0].equalsIgnoreCase("set") )
             {
-                if ( !sender.hasPermission("craftinc.borderprotection.set") )
+                if ( ! sender.hasPermission("craftinc.borderprotection.set") )
                 {
                     sender.sendMessage(Messages.noPermissionSet);
                     return false;
                 }
                 if ( args.length == 2 )
                 {
-                    borderManager.setBorder(( (Player) sender ).getWorld().getName(), Double.parseDouble(args[1]));
+                    try
+                    {
+                        borderManager.setBorder(( (Player) sender ).getWorld(), Double.parseDouble(args[1]));
+                    }
+                    catch ( Exception e )
+                    {
+                        sender.sendMessage(e.getMessage());
+                    }
                 }
-                else if ( args.length == 3 )
+                else
                 {
-                    String[] borderDefinition = { args[1], args[2] };
-                    borderManager.setBorder(( (Player) sender ).getWorld().getName(), borderDefinition);
+                    try
+                    {
+                        borderManager.setBorder(( (Player) sender ).getWorld(), args[1], args[2]);
+                    }
+                    catch ( Exception e )
+                    {
+                        sender.sendMessage(e.getMessage());
+                    }
                 }
 
                 // save the new border
-                borderManager.getSerializer().saveDataFile(borderManager.getBorders());
+                Border.saveBorders();
                 return true;
             }
 
             // get
             if ( args.length == 1 && ( args[0].equalsIgnoreCase("get") || args[0].equalsIgnoreCase("info") ) )
             {
-                String worldName = ( (Player) sender ).getWorld().getName();
+                World world = ( (Player) sender ).getWorld();
 
                 // exit and send the player a message if no border is set
-                if ( borderManager.getBorders() == null ||
-                     borderManager.getBorders().get(worldName) == null )
+                if ( ! Border.getBorders().containsKey(world) )
                 {
                     sender.sendMessage(Messages.borderInfoNoBorderSet);
                     return true;
                 }
 
-                ArrayList<Location> borderPoints = borderManager.getBorders()
-                                                                .get(worldName);
-                String borderDef = borderPoints.get(0).getX() + "," + borderPoints.get(0).getZ() + " " +
-                                   borderPoints.get(1).getX() + "," + borderPoints.get(1).getZ();
+                Border border = Border.getBorders().get(world);
 
-                sender.sendMessage(Messages.borderInfo(worldName, borderDef));
+                sender.sendMessage(Messages.borderInfo(world.getName(), border.toString()));
                 return true;
             }
         }

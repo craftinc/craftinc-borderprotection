@@ -17,12 +17,11 @@
 package de.craftinc.borderprotection;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
-
-import java.util.ArrayList;
 
 public class PlayerTeleportListener implements Listener
 {
@@ -43,7 +42,7 @@ public class PlayerTeleportListener implements Listener
         }
 
         // do nothing if there are no border definitions at all
-        if ( borderManager.getBorders() == null )
+        if ( Border.getBorders().isEmpty() )
         {
             return;
         }
@@ -52,13 +51,13 @@ public class PlayerTeleportListener implements Listener
         Location targetLocation = e.getTo();
 
         // world where the player is in
-        String worldName = targetLocation.getWorld().getName();
+        World world = targetLocation.getWorld();
 
         // borders of this world
-        ArrayList<Location> borderPoints = borderManager.getBorders().get(worldName);
+        Border border = Border.getBorders().get(world);
 
         // do nothing if there are no borders for this specific world
-        if ( borderPoints == null )
+        if ( border == null )
         {
             return;
         }
@@ -67,7 +66,7 @@ public class PlayerTeleportListener implements Listener
         Double[] newXZ;
 
         // check if target is inside the borders. null if yes, otherwise a tuple which defines the new position
-        newXZ = borderManager.checkBorder(targetLocation, borderPoints, borderManager.getBuffer());
+        newXZ = borderManager.checkBorder(targetLocation, border, BorderManager.buffer);
 
 
         // Cancel event, if new coordinates have been calculated.

@@ -18,14 +18,13 @@ package de.craftinc.borderprotection;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
+import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-
-import java.util.ArrayList;
 
 public class PlayerMoveListener implements Listener
 {
@@ -37,11 +36,11 @@ public class PlayerMoveListener implements Listener
         this.borderManager = borderManager;
     }
 
-    private Double goUpUntilFreeSpot( Player player )
+    private Double goUpUntilFreeSpot( Location newLocation )
     {
         // go up in height until the player can stand in AIR
-        Block footBlock = player.getLocation().getBlock();
-        Block headBlock = player.getEyeLocation().getBlock();
+        Block footBlock = newLocation.getBlock();
+        Block headBlock = newLocation.getBlock().getRelative(BlockFace.UP);
         while ( footBlock.getType() != Material.AIR || headBlock.getType() != Material.AIR )
         {
             byte offset = 1;
@@ -66,7 +65,7 @@ public class PlayerMoveListener implements Listener
         }
 
         // do nothing if there are no border definitions at all
-        if ( borderManager.getBorders() == null )
+        if ( Border.getBorders().isEmpty() )
         {
             return;
         }
@@ -75,20 +74,20 @@ public class PlayerMoveListener implements Listener
         Location playerLocation = e.getPlayer().getLocation();
 
         // world where the player is in
-        String worldName = e.getPlayer().getWorld().getName();
+        World world= e.getPlayer().getWorld();
 
-        // borders of this world
-        ArrayList<Location> borderPoints = borderManager.getBorders().get(worldName);
+        // border of this world
+        Border border = Border.getBorders().get(world);
 
         // do nothing if there are no borders for this specific world
-        if ( borderPoints == null )
+        if ( border == null )
             return;
 
         // change x or z. default: do not change
         Double[] newXZ;
 
         // check if player is inside the borders. null if yes, otherwise a tuple which defines the new player position
-        newXZ = borderManager.checkBorder(playerLocation, borderPoints, borderManager.getBuffer());
+        newXZ = borderManager.checkBorder(playerLocation, border, BorderManager.buffer);
 
         // Do nothing, if no new coordinates have been calculated.
         if ( newXZ == null )
@@ -101,7 +100,7 @@ public class PlayerMoveListener implements Listener
         newXZ[1] = newXZ[1] == null ? playerLocation.getZ() : newXZ[1];
 
         // change Y if necessary (when there is no free spot)
-        Double newY = goUpUntilFreeSpot(e.getPlayer());
+        Double newY = goUpUntilFreeSpot(new Location(world, newXZ[0], e.getPlayer().getLocation().getY(), newXZ[1]));
 
         // teleport the player to the new X and Z coordinates
         e.getPlayer().teleport(
