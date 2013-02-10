@@ -61,13 +61,17 @@ public class Commands implements CommandExecutor
                     sender.sendMessage(Messages.noPermissionSet);
                     return false;
                 }
+                World world = ( (Player) sender ).getWorld();
+
                 // set <distance>
                 if ( args.length == 2 )
                 {
                     try
                     {
                         borderManager.setBorder(( (Player) sender ).getWorld(), Double.parseDouble(args[1]));
+                        Border border = Border.getBorders().get(world);
                         sender.sendMessage(Messages.borderCreationSuccessful);
+                        sender.sendMessage(Messages.borderInfo(world.getName(), border.toString()));
                     }
                     catch ( Exception e )
                     {
@@ -80,6 +84,9 @@ public class Commands implements CommandExecutor
                     try
                     {
                         borderManager.setBorder(( (Player) sender ).getWorld(), args[1], args[2]);
+                        Border border = Border.getBorders().get(world);
+                        sender.sendMessage(Messages.borderCreationSuccessful);
+                        sender.sendMessage(Messages.borderInfo(world.getName(), border.toString()));
                     }
                     catch ( Exception e )
                     {
