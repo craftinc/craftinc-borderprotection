@@ -1,8 +1,9 @@
-craftinc-borderprotection
-=========================
+# Craft Inc. BorderProtection
 
 A border protection plugin for bukkit. All players (except those with ignoreborders permission) cannot go beyond the border.
 
-Full user guide can be found here: http://www.craftinc.de/border-protection/
+Read the [full user guide](http://www.craftinc.de/border-protection/) for more information.
 
-This project is licensed under the GPLv3, see LICENSE
+## License
+
+This project is licensed under GPLv3 and some files are LGPLv3. For exact information see LICENSE.

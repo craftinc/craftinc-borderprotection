@@ -1,5 +1,5 @@
-#    CraftInc BorderProtection
-#    Copyright (C) 2012  Paul Schulze
+#    Craft Inc. BorderProtection
+#    Copyright (C) 2013  Paul Schulze, Tobias Ottenweller
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -16,14 +16,14 @@
 
 name: Craft Inc. BorderProtection
 main: de.craftinc.borderprotection.Plugin
-version: 1.0.0
-author: ddidderr
+version: ${project.version}
+authors: [ddidderr, mice_on_drugs]
 website: http://www.craftinc.de/plugins/borderprotection
 
 
 commands:
   cibp:
-    description: Shows help for CraftInc BorderProtection
+    description: Shows help for Craft Inc. BorderProtection
 
 permissions:
   craftinc.borderprotection.set:

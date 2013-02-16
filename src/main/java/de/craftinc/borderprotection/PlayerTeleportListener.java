@@ -1,5 +1,5 @@
-/*  CraftInc BorderProtection
-    Copyright (C) 2012  Paul Schulze
+/*  Craft Inc. BorderProtection
+    Copyright (C) 2013  Paul Schulze, Tobias Ottenweller
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ public class PlayerTeleportListener implements Listener
         this.borderManager = borderManager;
     }
 
+    @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerMove( PlayerTeleportEvent e )
     {
@@ -62,6 +63,7 @@ public class PlayerTeleportListener implements Listener
             return;
         }
 
+        // do nothing if border is disabled
         if ( !border.isActive() )
         {
             return;

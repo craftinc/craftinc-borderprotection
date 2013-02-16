@@ -1,5 +1,5 @@
-/*  CraftInc BorderProtection
-    Copyright (C) 2012  Paul Schulze
+/*  Craft Inc. BorderProtection
+    Copyright (C) 2013  Paul Schulze, Tobias Ottenweller
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -68,7 +68,8 @@ public class Messages
     public static String helpGeneral =
             ChatColor.GREEN + "CraftInc BorderProtection - Usage:" + NEWLINE +
             makeCmd("help", "shows this help") +
-            makeCmd("get | info", "shows the borders of the current world") +
+            makeCmd("get | info", "shows the border of the current world") +
+            makeCmd("on | off", "enables/disables the border of the current world") +
             makeCmd("set", "Border rectangle edges will be this far away from point of origin.", "<integer>") +
             makeCmd("set", "Border rectangle is defined by the two points. A point is specified as: x,z",
                     "<point1>", "<point2>");
