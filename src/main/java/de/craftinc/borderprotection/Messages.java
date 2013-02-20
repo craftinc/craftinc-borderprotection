@@ -82,13 +82,21 @@ public class Messages
     public static String commandIssuedByNonPlayer
             = ChatColor.RED + "Only a player can use CraftInc BorderProtection commands!";
 
-    public static String borderInfo( String worldName, String borderDef )
+    public static String borderInfo( String worldName, String borderDef, Boolean isBorderEnabled )
     {
+        String borderEnabled;
+        if (isBorderEnabled)
+        {
+            borderEnabled = ChatColor.GREEN + "enabled";
+        } else {
+            borderEnabled = ChatColor.RED + "disabled";
+        }
 
         return ChatColor.WHITE + "Borders of world " +
                ChatColor.YELLOW + worldName +
                ChatColor.WHITE + ": " +
-               ChatColor.YELLOW + borderDef;
+               ChatColor.YELLOW + borderDef + ChatColor.WHITE + "." + NEWLINE +
+               ChatColor.WHITE + "Border is " + borderEnabled + ChatColor.WHITE + ".";
     }
 
     public static String borderInfoNoBorderSet =

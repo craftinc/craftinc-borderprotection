@@ -71,7 +71,7 @@ public class Commands implements CommandExecutor
                         borderManager.setBorder(( (Player) sender ).getWorld(), Double.parseDouble(args[1]));
                         Border border = Border.getBorders().get(world);
                         sender.sendMessage(Messages.borderCreationSuccessful);
-                        sender.sendMessage(Messages.borderInfo(world.getName(), border.toString()));
+                        sender.sendMessage(Messages.borderInfo(world.getName(), border.toString(), border.isActive()));
                     }
                     catch ( Exception e )
                     {
@@ -86,7 +86,7 @@ public class Commands implements CommandExecutor
                         borderManager.setBorder(( (Player) sender ).getWorld(), args[1], args[2]);
                         Border border = Border.getBorders().get(world);
                         sender.sendMessage(Messages.borderCreationSuccessful);
-                        sender.sendMessage(Messages.borderInfo(world.getName(), border.toString()));
+                        sender.sendMessage(Messages.borderInfo(world.getName(), border.toString(), border.isActive()));
                     }
                     catch ( Exception e )
                     {
@@ -120,7 +120,7 @@ public class Commands implements CommandExecutor
 
                 Border border = Border.getBorders().get(world);
 
-                sender.sendMessage(Messages.borderInfo(world.getName(), border.toString()));
+                sender.sendMessage(Messages.borderInfo(world.getName(), border.toString(), border.isActive()));
                 return true;
             }
 
