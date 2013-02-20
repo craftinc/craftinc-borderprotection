@@ -122,8 +122,6 @@ public class Border implements ConfigurationSerializable
         map.put(rectPoint2Name, LocationSerializer.serializeLocation(rectPoint2));
         map.put(isActiveKey, isActive);
 
-        System.out.println(map);
-
         return map;
     }
 

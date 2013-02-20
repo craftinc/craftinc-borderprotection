@@ -92,7 +92,7 @@ public class Messages
     }
 
     public static String borderInfoNoBorderSet =
-            ChatColor.YELLOW + "No border here.";
+            ChatColor.YELLOW + "No border in this world.";
 
     public static String noPermissionSet =
             ChatColor.RED + "Sorry, you don't have permission to set the border.";

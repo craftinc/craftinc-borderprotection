@@ -17,6 +17,7 @@
 name: Craft Inc. BorderProtection
 main: de.craftinc.borderprotection.Plugin
 version: ${project.version}
+softdepend: [Multiverse-Core]
 authors: [ddidderr, mice_on_drugs]
 website: http://www.craftinc.de/plugins/borderprotection
 

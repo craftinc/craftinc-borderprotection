@@ -128,12 +128,21 @@ public class Commands implements CommandExecutor
             if ( args.length == 1 && ( args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("off") ) )
             {
                 World world = ( (Player) sender ).getWorld();
-                if (args[0].equalsIgnoreCase("on")) {
-                    Border.getBorders().get(world).enable();
-                    sender.sendMessage(Messages.borderEnabled);
-                } else {
-                    Border.getBorders().get(world).disable();
-                    sender.sendMessage(Messages.borderDisabled);
+                Border border = Border.getBorders().get(world);
+
+                if (border != null)
+                {
+                    if (args[0].equalsIgnoreCase("on")) {
+                        border.enable();
+                        sender.sendMessage(Messages.borderEnabled);
+                    } else {
+                        border.disable();
+                        sender.sendMessage(Messages.borderDisabled);
+                    }
+                }
+                else
+                {
+                    sender.sendMessage(Messages.borderInfoNoBorderSet);
                 }
 
                 // save the new border
