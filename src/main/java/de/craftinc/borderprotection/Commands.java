@@ -127,15 +127,24 @@ public class Commands implements CommandExecutor
             // on
             if ( args.length == 1 && ( args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("off") ) )
             {
+                if ( !sender.hasPermission("craftinc.borderprotection.set") )
+                {
+                    sender.sendMessage(Messages.noPermissionSet);
+                    return false;
+                }
+
                 World world = ( (Player) sender ).getWorld();
                 Border border = Border.getBorders().get(world);
 
-                if (border != null)
+                if ( border != null )
                 {
-                    if (args[0].equalsIgnoreCase("on")) {
+                    if ( args[0].equalsIgnoreCase("on") )
+                    {
                         border.enable();
                         sender.sendMessage(Messages.borderEnabled);
-                    } else {
+                    }
+                    else
+                    {
                         border.disable();
                         sender.sendMessage(Messages.borderDisabled);
                     }
