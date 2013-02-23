@@ -33,3 +33,6 @@ permissions:
   craftinc.borderprotection.ignoreborders:
     default: op
     description: Allows to be everywhere on the map (ignoring the borders).
+  craftinc.borderprotection.update:
+    default: op
+    description: Allows to get notified on login, when a new update is available.

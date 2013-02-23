@@ -116,4 +116,14 @@ public class Messages
 
     public static String borderEnableDisableException =
             ChatColor.RED + "Error: Could not save border state on server. After the next reload this border state will be lost!";
+
+    public static String UpdateMessage( String newVersion, String curVersion )
+    {
+        return ChatColor.RED + "Craft Inc. BorderProtection: New version available!" + NEWLINE +
+               ChatColor.YELLOW + "Current version: " + ChatColor.WHITE + curVersion + NEWLINE +
+               ChatColor.YELLOW + "New version: " + ChatColor.WHITE + newVersion + NEWLINE +
+               ChatColor.YELLOW + "Please visit:" + NEWLINE +
+               ChatColor.AQUA + "http://dev.bukkit.org/server-mods/craftinc-borderprotection" + NEWLINE +
+               ChatColor.YELLOW + "to get the latest version!";
+    }
 }

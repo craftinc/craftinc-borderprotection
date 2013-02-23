@@ -48,6 +48,7 @@ public class Plugin extends JavaPlugin
         BorderManager borderManager = new BorderManager();
         PlayerMoveListener playerMoveListener = new PlayerMoveListener(borderManager);
         PlayerTeleportListener playerTeleportListener = new PlayerTeleportListener(borderManager);
+        PlayerLoginListener playerLoginListener = new PlayerLoginListener();
 
         // commands
         Commands commandExecutor = new Commands(borderManager);
@@ -57,5 +58,6 @@ public class Plugin extends JavaPlugin
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(playerMoveListener, this);
         pm.registerEvents(playerTeleportListener, this);
+        pm.registerEvents(playerLoginListener, this);
     }
 }

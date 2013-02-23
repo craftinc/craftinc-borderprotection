@@ -33,9 +33,15 @@ public class PlayerTeleportListener implements Listener
     }
 
     @SuppressWarnings("unused")
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerMove( PlayerTeleportEvent e )
     {
+        // do nothing if the event is already cancelled
+        if (e.isCancelled())
+        {
+            return;
+        }
+
         // do nothing if player has the ignoreborders permission
         if ( e.getPlayer().hasPermission("craftinc.borderprotection.ignoreborders") )
         {
