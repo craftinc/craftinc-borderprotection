@@ -53,6 +53,29 @@ public class Commands implements CommandExecutor
                 return true;
             }
 
+            // checkversion
+            if ( args.length > 0 && args[0].equalsIgnoreCase("checkversion") )
+            {
+                if ( !sender.hasPermission("craftinc.borderprotection.update") )
+                {
+                    sender.sendMessage(Messages.noPermissionCheckversion);
+                    return false;
+                }
+
+                if ( UpdateHelper.newVersionAvailable() )
+                {
+                    sender.sendMessage(
+                            Messages.updateMessage(UpdateHelper.cachedLatestVersion, UpdateHelper.getCurrentVersion()));
+                    return true;
+                }
+                else
+                {
+                    sender.sendMessage(Messages.noUpdateAvailable);
+                    return true;
+                }
+
+            }
+
             // set
             if ( ( args.length == 2 || args.length == 3 ) && args[0].equalsIgnoreCase("set") )
             {

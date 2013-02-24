@@ -74,7 +74,8 @@ public class Messages
             makeCmd("on | off", "enables/disables the border of the current world") +
             makeCmd("set", "Border rectangle edges will be this far away from point of origin.", "<integer>") +
             makeCmd("set", "Border rectangle is defined by the two points. A point is specified as: x,z",
-                    "<point1>", "<point2>");
+                    "<point1>", "<point2>") +
+            makeCmd("checkversion", "Checks for a newer version.");
 
     public static String borderCreationSuccessful
             = ChatColor.YELLOW + "New border was set " +
@@ -107,6 +108,9 @@ public class Messages
     public static String noPermissionSet =
             ChatColor.RED + "Sorry, you don't have permission to change the border.";
 
+    public static String noPermissionCheckversion =
+            ChatColor.RED + "Sorry, you don't have permission to check for new versions.";
+
     public static String borderEnabled =
             ChatColor.YELLOW + "Border enabled.";
 
@@ -128,4 +132,7 @@ public class Messages
                ChatColor.AQUA + "http://dev.bukkit.org/server-mods/craftinc-borderprotection" + NEWLINE +
                ChatColor.YELLOW + "to get the latest version!";
     }
+
+    public static String noUpdateAvailable =
+            ChatColor.YELLOW + "No updates available.";
 }
