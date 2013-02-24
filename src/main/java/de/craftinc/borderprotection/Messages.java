@@ -22,6 +22,8 @@ public class Messages
 {
     private static final String NEWLINE = "\n";
 
+    private static final String pluginName = Plugin.getPlugin().getDescription().getName();
+
     private static String makeCmd( String command, String explanation, String... args )
     {
         StringBuilder sb = new StringBuilder();
@@ -66,7 +68,7 @@ public class Messages
             makeCmd("/cibp get", "shows the borders of the current world");
 
     public static String helpGeneral =
-            ChatColor.GREEN + "CraftInc BorderProtection - Usage:" + NEWLINE +
+            ChatColor.GREEN + pluginName + " - Usage:" + NEWLINE +
             makeCmd("help", "shows this help") +
             makeCmd("get | info", "shows the border of the current world") +
             makeCmd("on | off", "enables/disables the border of the current world") +
@@ -80,7 +82,7 @@ public class Messages
               ChatColor.YELLOW + "!";
 
     public static String commandIssuedByNonPlayer
-            = ChatColor.RED + "Only a player can use CraftInc BorderProtection commands!";
+            = ChatColor.RED + "Only a player can use " + pluginName + " commands!";
 
     public static String borderInfo( String worldName, String borderDef, Boolean isBorderEnabled )
     {
@@ -117,9 +119,9 @@ public class Messages
     public static String borderEnableDisableException =
             ChatColor.RED + "Error: Could not save border state on server. After the next reload this border state will be lost!";
 
-    public static String UpdateMessage( String newVersion, String curVersion )
+    public static String updateMessage( String newVersion, String curVersion )
     {
-        return ChatColor.RED + "Craft Inc. BorderProtection: New version available!" + NEWLINE +
+        return ChatColor.RED + pluginName + ": New version available!" + NEWLINE +
                ChatColor.YELLOW + "Current version: " + ChatColor.WHITE + curVersion + NEWLINE +
                ChatColor.YELLOW + "New version: " + ChatColor.WHITE + newVersion + NEWLINE +
                ChatColor.YELLOW + "Please visit:" + NEWLINE +

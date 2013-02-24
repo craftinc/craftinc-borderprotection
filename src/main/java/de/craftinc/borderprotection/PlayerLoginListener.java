@@ -25,6 +25,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 
 public class PlayerLoginListener implements Listener
 {
+    @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin( PlayerLoginEvent e )
     {
@@ -40,7 +41,7 @@ public class PlayerLoginListener implements Listener
                     @Override
                     public void run()
                     {
-                        player.sendMessage(Messages.UpdateMessage(UpdateHelper.cachedLatestVersion,
+                        player.sendMessage(Messages.updateMessage(UpdateHelper.cachedLatestVersion,
                                                                   UpdateHelper.getCurrentVersion()));
                     }
                 }, 20L);

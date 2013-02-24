@@ -46,6 +46,8 @@ public class Plugin extends JavaPlugin
         Plugin.cibpPlugin = this;
 
         BorderManager borderManager = new BorderManager();
+
+        // create listeners
         PlayerMoveListener playerMoveListener = new PlayerMoveListener(borderManager);
         PlayerTeleportListener playerTeleportListener = new PlayerTeleportListener(borderManager);
         PlayerLoginListener playerLoginListener = new PlayerLoginListener();
@@ -54,7 +56,7 @@ public class Plugin extends JavaPlugin
         Commands commandExecutor = new Commands(borderManager);
         getCommand("cibp").setExecutor(commandExecutor);
 
-        // listeners
+        // register listeners
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(playerMoveListener, this);
         pm.registerEvents(playerTeleportListener, this);
