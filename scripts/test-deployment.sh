@@ -16,4 +16,6 @@ mkdir -p "$PLUGIN_DIR"
 
 cp "$SCRIPT_DIR/../target/$ARTIFACT_ID-$VERSION".jar "$PLUGIN_DIR/$ARTIFACT_ID".jar
 
+echo -e "ddidderr\nmice_on_drugs\nMochaccino" > "$BUKKIT_DIR/ops.txt"
+
 "$SCRIPT_DIR/minecraft.sh" reload_or_start
