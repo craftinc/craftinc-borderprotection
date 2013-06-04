@@ -18,6 +18,7 @@ package de.craftinc.borderprotection;
 
 import de.craftinc.borderprotection.borders.CircBorder;
 import de.craftinc.borderprotection.borders.RectBorder;
+import de.craftinc.borderprotection.commands.CommandSwitch;
 import de.craftinc.borderprotection.events.PlayerLoginListener;
 import de.craftinc.borderprotection.events.PlayerMoveListener;
 import de.craftinc.borderprotection.events.PlayerTeleportListener;
@@ -52,7 +53,7 @@ public class Plugin extends JavaPlugin
         PlayerLoginListener playerLoginListener = new PlayerLoginListener();
 
         // commands
-        Commands commandExecutor = new Commands();
+        CommandSwitch commandExecutor = new CommandSwitch();
         getCommand("cibp").setExecutor(commandExecutor);
 
         // register listeners
