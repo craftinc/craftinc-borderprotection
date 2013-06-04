@@ -16,13 +16,23 @@
 */
 package de.craftinc.borderprotection;
 
+import de.craftinc.borderprotection.borders.Border;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
+import java.util.Calendar;
+import java.util.HashMap;
 
 public class Messages
 {
     private static final String NEWLINE = "\n";
 
-    private static final String pluginName = Plugin.getPlugin().getDescription().getName();
+    private static final String pluginName = Plugin.instance.getDescription().getName();
+
+    /**
+     * For every player and every message of that player save the time when he got the last one.
+     */
+    private static final HashMap<String, HashMap<String, Long>> lastMessage = new HashMap<String, HashMap<String, Long>>();
 
     private static String makeCmd( String command, String explanation, String... args )
     {
@@ -60,21 +70,25 @@ public class Messages
             "strange new worlds, to seek out new life and new civilizations, to boldly go where no one has gone before.";
 
     public static String borderMessage =
-            "Sorry Dude! This is the border... the final frontier! " + borderExplanation + NEWLINE +
+            ChatColor.YELLOW + "Sorry Dude! " +
+            ChatColor.WHITE + "This is the border... the final frontier! " + borderExplanation + NEWLINE +
             makeCmd("/cibp get", "shows the borders of the current world");
 
     public static String borderTeleportMessage =
-            "Sorry Dude! You cannot teleport outside the border. " + borderExplanation + NEWLINE +
+            ChatColor.YELLOW + "Sorry Dude! " +
+            ChatColor.WHITE + "You cannot teleport outside the border. " + borderExplanation + NEWLINE +
             makeCmd("/cibp get", "shows the borders of the current world");
 
     public static String helpGeneral =
             ChatColor.GREEN + pluginName + " - Usage:" + NEWLINE +
+            ChatColor.WHITE + "Commands are always related to the current world." + NEWLINE +
             makeCmd("help", "shows this help") +
-            makeCmd("get | info", "shows the border of the current world") +
-            makeCmd("on | off", "enables/disables the border of the current world") +
-            makeCmd("set", "Border rectangle edges will be this far away from point of origin.", "<integer>") +
-            makeCmd("set", "Border rectangle is defined by the two points. A point is specified as: x,z",
-                    "<point1>", "<point2>") +
+            makeCmd("get | info", "Shows information about the border.") +
+            makeCmd("on | off", "Enables/disables the border.") +
+            makeCmd("set", "Square border with distance (d) from 0,0.", "r", "<d>") +
+            makeCmd("set", "Rectangle defined by two points. Point=x,z.", "r", "<p1>", "<p2>") +
+            makeCmd("set", "Circle border with radius from 0,0.", "c", "<radius>") +
+            makeCmd("set", "Circle defined by center and radius. Center=x,z.", "c", "<c>", "<r>") +
             makeCmd("checkversion", "Checks for a newer version.");
 
     public static String borderCreationSuccessful
@@ -85,20 +99,17 @@ public class Messages
     public static String commandIssuedByNonPlayer
             = ChatColor.RED + "Only a player can use " + pluginName + " commands!";
 
-    public static String borderInfo( String worldName, String borderDef, Boolean isBorderEnabled )
+    public static String borderInfo( String worldName, Border border )
     {
         String borderEnabled;
-        if (isBorderEnabled)
-        {
+        if ( border.isActive() )
             borderEnabled = ChatColor.GREEN + "enabled";
-        } else {
+        else
             borderEnabled = ChatColor.RED + "disabled";
-        }
 
-        return ChatColor.WHITE + "Borders of world " +
-               ChatColor.YELLOW + worldName +
-               ChatColor.WHITE + ": " +
-               ChatColor.YELLOW + borderDef + ChatColor.WHITE + "." + NEWLINE +
+        return ChatColor.WHITE + "Border of world " + ChatColor.YELLOW + worldName + ChatColor.WHITE + ": " + NEWLINE +
+               ChatColor.YELLOW + "Type: " + ChatColor.WHITE + border.getBorderTypeString() + NEWLINE +
+               border.getBorderInfoString() + NEWLINE +
                ChatColor.WHITE + "Border is " + borderEnabled + ChatColor.WHITE + ".";
     }
 
@@ -121,7 +132,8 @@ public class Messages
             ChatColor.RED + "Error: Could not save border on server. After the next reload this border will be lost!";
 
     public static String borderEnableDisableException =
-            ChatColor.RED + "Error: Could not save border state on server. After the next reload this border state will be lost!";
+            ChatColor.RED +
+            "Error: Could not save border state on server. After the next reload this border state will be lost!";
 
     public static String updateMessage( String newVersion, String curVersion )
     {
@@ -129,10 +141,45 @@ public class Messages
                ChatColor.YELLOW + "Current version: " + ChatColor.WHITE + curVersion + NEWLINE +
                ChatColor.YELLOW + "New version: " + ChatColor.WHITE + newVersion + NEWLINE +
                ChatColor.YELLOW + "Please visit:" + NEWLINE +
-               ChatColor.AQUA + "http://dev.bukkit.org/server-mods/craftinc-borderprotection" + NEWLINE +
+               ChatColor.AQUA + "http://dev.bukkit.org/bukkit-mods/craftinc-borderprotection" + NEWLINE +
                ChatColor.YELLOW + "to get the latest version!";
     }
 
     public static String noUpdateAvailable =
             ChatColor.YELLOW + "No updates available.";
+
+    /**
+     * Display a message to a player and then wait for timeout seconds before displaying it again.
+     *
+     * @param player  Player who will see the message.
+     * @param message The message String.
+     * @param timeout Timeout in seconds until the message will be displayed earliest.
+     */
+    public static void showMessageWithTimeout( final Player player, final String message, final Integer timeout )
+    {
+        // get the current time
+        final Long now = Calendar.getInstance().getTimeInMillis();
+
+        if ( ( lastMessage.get(player.getName()) != null && lastMessage.get(player.getName()).get(message) != null &&
+               now - timeout * 1000 > lastMessage.get(player.getName()).get(message) ) ||
+             lastMessage.get(player.getName()) != null && lastMessage.get(player.getName()).get(message) == null ||
+             lastMessage.get(player.getName()) == null )
+        {
+            // show message
+            player.sendMessage(message);
+
+            // set last sent message for this player to now
+            if ( lastMessage.get(player.getName()) == null )
+            {
+                lastMessage.put(player.getName(), new HashMap<String, Long>()
+                {{
+                        put(message, now);
+                    }});
+            }
+            else
+            {
+                lastMessage.get(player.getName()).put(message, now);
+            }
+        }
+    }
 }

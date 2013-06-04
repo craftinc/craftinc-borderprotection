@@ -14,8 +14,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package de.craftinc.borderprotection;
+package de.craftinc.borderprotection.events;
 
+import de.craftinc.borderprotection.Messages;
+import de.craftinc.borderprotection.borders.Border;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.EventHandler;
@@ -25,19 +27,12 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerTeleportListener implements Listener
 {
-    private BorderManager borderManager;
-
-    public PlayerTeleportListener( BorderManager borderManager )
-    {
-        this.borderManager = borderManager;
-    }
-
     @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerMove( PlayerTeleportEvent e )
+    public void onPlayerTeleport( PlayerTeleportEvent e )
     {
         // do nothing if the event is already cancelled
-        if (e.isCancelled())
+        if ( e.isCancelled() )
         {
             return;
         }
@@ -69,24 +64,22 @@ public class PlayerTeleportListener implements Listener
             return;
         }
 
-        // do nothing if border is disabled
+        // do nothing if rectBorder is disabled
         if ( !border.isActive() )
         {
             return;
         }
 
-        // change x or z. default: do not change
-        Double[] newXZ;
+        // check if player is inside the borders and get a new location if not
+        Location destination = border.checkBorder(targetLocation);
 
-        // check if target is inside the borders. null if yes, otherwise a tuple which defines the new position
-        newXZ = borderManager.checkBorder(targetLocation, border, BorderManager.buffer);
-
-
-        // Cancel event, if new coordinates have been calculated.
-        if ( newXZ != null )
+        // Do nothing, if no new location has been calculated.
+        if ( destination == null )
         {
-            e.setCancelled(true);
-            borderManager.showMessageWithTimeout(e.getPlayer(), Messages.borderTeleportMessage);
+            return;
         }
+
+        e.setCancelled(true);
+        Messages.showMessageWithTimeout(e.getPlayer(), Messages.borderTeleportMessage, 10);
     }
 }

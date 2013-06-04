@@ -14,7 +14,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package de.craftinc.borderprotection;
+package de.craftinc.borderprotection.util;
+
+import de.craftinc.borderprotection.Plugin;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,7 +37,6 @@ public class UpdateHelper
      * The latest version which was seen on last check.
      */
     public static String cachedLatestVersion = null;
-
 
     /**
      * Gets the latest version from the updateURL and returns it as <code>String</code>.
@@ -60,11 +61,11 @@ public class UpdateHelper
         }
         catch ( MalformedURLException e )
         {
-            Plugin.getPlugin().getLogger().warning("Could not check for latest version. Update URL is malformed.");
+            Plugin.instance.getLogger().warning("Could not check for latest version. Update URL is malformed.");
         }
         catch ( IOException e )
         {
-            Plugin.getPlugin().getLogger().warning("Could not check for latest version. Update URL was not readable.");
+            Plugin.instance.getLogger().warning("Could not check for latest version. Update URL was not readable.");
         }
 
         // update cached latest version
@@ -73,7 +74,6 @@ public class UpdateHelper
         return s.toString();
     }
 
-
     /**
      * Gets the current version of this plugin directly from the plugin.yml version entry.
      *
@@ -81,9 +81,8 @@ public class UpdateHelper
      */
     public static String getCurrentVersion()
     {
-        return Plugin.getPlugin().getDescription().getVersion();
+        return Plugin.instance.getDescription().getVersion();
     }
-
 
     /**
      * Checks if a newer version is available.
@@ -92,7 +91,12 @@ public class UpdateHelper
      */
     public static Boolean newVersionAvailable()
     {
+        final String version = getLatestVersion();
+
+        // do not show beta or dev versions
+        if (version.contains("beta") || version.contains("dev"))
+            return false;
+
         return !getCurrentVersion().equals(getLatestVersion());
     }
-
 }

@@ -14,7 +14,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-name: Craft Inc. BorderProtection
+name: ${project.name}
 main: de.craftinc.borderprotection.Plugin
 version: ${project.version}
 softdepend: [Multiverse-Core]
@@ -31,7 +31,7 @@ permissions:
     default: op
     description: Allows to set the border for a world.
   craftinc.borderprotection.ignoreborders:
-    default: op
+    default: false
     description: Allows to be everywhere on the map (ignoring the borders).
   craftinc.borderprotection.update:
     default: op

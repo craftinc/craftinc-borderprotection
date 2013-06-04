@@ -14,8 +14,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package de.craftinc.borderprotection;
+package de.craftinc.borderprotection.events;
 
+import de.craftinc.borderprotection.Messages;
+import de.craftinc.borderprotection.Plugin;
+import de.craftinc.borderprotection.util.UpdateHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,7 +39,7 @@ public class PlayerLoginListener implements Listener
             if ( UpdateHelper.newVersionAvailable() )
             {
                 // Schedule a task which delays 20 ticks (1 second) and then sends a message to the player
-                Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.getPlugin(), new Runnable()
+                Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.instance, new Runnable()
                 {
                     @Override
                     public void run()

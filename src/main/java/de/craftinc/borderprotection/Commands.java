@@ -16,6 +16,11 @@
 */
 package de.craftinc.borderprotection;
 
+import de.craftinc.borderprotection.borders.Border;
+import de.craftinc.borderprotection.borders.CircBorder;
+import de.craftinc.borderprotection.borders.RectBorder;
+import de.craftinc.borderprotection.util.UpdateHelper;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,13 +31,6 @@ import java.io.IOException;
 
 public class Commands implements CommandExecutor
 {
-    private BorderManager borderManager;
-
-    public Commands( BorderManager borderManager )
-    {
-        this.borderManager = borderManager;
-    }
-
     @Override
     public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
     {
@@ -77,7 +75,7 @@ public class Commands implements CommandExecutor
             }
 
             // set
-            if ( ( args.length == 2 || args.length == 3 ) && args[0].equalsIgnoreCase("set") )
+            if ( ( args.length == 3 || args.length == 4 ) && args[0].equalsIgnoreCase("set") )
             {
                 if ( !sender.hasPermission("craftinc.borderprotection.set") )
                 {
@@ -86,30 +84,72 @@ public class Commands implements CommandExecutor
                 }
                 World world = ( (Player) sender ).getWorld();
 
-                // set <distance>
-                if ( args.length == 2 )
+                // set [r|c] <distance>
+                if ( args.length == 3 )
                 {
                     try
                     {
-                        borderManager.setBorder(( (Player) sender ).getWorld(), Double.parseDouble(args[1]));
-                        Border border = Border.getBorders().get(world);
-                        sender.sendMessage(Messages.borderCreationSuccessful);
-                        sender.sendMessage(Messages.borderInfo(world.getName(), border.toString(), border.isActive()));
+                        Double distance = Double.parseDouble(args[2]);
+                        Border newBorder = null;
+
+                        // rect border
+                        if ( args[1].equalsIgnoreCase("r") )
+                        {
+                            newBorder = new RectBorder(new Location(world, distance, 0, distance),
+                                                       new Location(world, -distance, 0, -distance));
+                        }
+                        // circ border
+                        else if ( args[1].equalsIgnoreCase("c") )
+                        {
+                            newBorder = new CircBorder(new Location(world, 0, 0, 0), distance);
+                        }
+
+                        if ( newBorder != null )
+                        {
+                            sender.sendMessage(Messages.borderCreationSuccessful);
+                            sender.sendMessage(
+                                    Messages.borderInfo(world.getName(), newBorder));
+                        }
                     }
                     catch ( Exception e )
                     {
                         sender.sendMessage(e.getMessage());
                     }
                 }
-                // set <point1> <point2>
+                // set r <point1> <point2> | set c <center> <radius>
                 else
                 {
                     try
                     {
-                        borderManager.setBorder(( (Player) sender ).getWorld(), args[1], args[2]);
-                        Border border = Border.getBorders().get(world);
-                        sender.sendMessage(Messages.borderCreationSuccessful);
-                        sender.sendMessage(Messages.borderInfo(world.getName(), border.toString(), border.isActive()));
+                        Border newBorder = null;
+
+                        // rect border
+                        if ( args[1].equalsIgnoreCase("r") )
+                        {
+                            Double p1X = Double.parseDouble(args[2].split(",")[0]);
+                            Double p1Z = Double.parseDouble(args[2].split(",")[1]);
+                            Double p2X = Double.parseDouble(args[3].split(",")[0]);
+                            Double p2Z = Double.parseDouble(args[3].split(",")[1]);
+
+                            newBorder = new RectBorder(new Location(world, p1X, 0, p1Z),
+                                                       new Location(world, p2X, 0, p2Z));
+                        }
+                        // circ border
+                        else if ( args[1].equalsIgnoreCase("c") )
+                        {
+                            Double centerX = Double.parseDouble(args[2].split(",")[0]);
+                            Double centerZ = Double.parseDouble(args[2].split(",")[1]);
+                            Double radius = Double.parseDouble(args[3]);
+
+                            newBorder = new CircBorder(new Location(world, centerX, 0, centerZ), radius);
+                        }
+
+                        if ( newBorder != null )
+                        {
+                            sender.sendMessage(Messages.borderCreationSuccessful);
+                            sender.sendMessage(
+                                    Messages.borderInfo(world.getName(), newBorder));
+                        }
                     }
                     catch ( Exception e )
                     {
@@ -143,7 +183,7 @@ public class Commands implements CommandExecutor
 
                 Border border = Border.getBorders().get(world);
 
-                sender.sendMessage(Messages.borderInfo(world.getName(), border.toString(), border.isActive()));
+                sender.sendMessage(Messages.borderInfo(world.getName(), border));
                 return true;
             }
 
@@ -177,7 +217,7 @@ public class Commands implements CommandExecutor
                     sender.sendMessage(Messages.borderInfoNoBorderSet);
                 }
 
-                // save the new border
+                // save the changed border
                 try
                 {
                     Border.saveBorders();

@@ -16,23 +16,24 @@
 */
 package de.craftinc.borderprotection;
 
+import de.craftinc.borderprotection.borders.CircBorder;
+import de.craftinc.borderprotection.borders.RectBorder;
+import de.craftinc.borderprotection.events.PlayerLoginListener;
+import de.craftinc.borderprotection.events.PlayerMoveListener;
+import de.craftinc.borderprotection.events.PlayerTeleportListener;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Plugin extends JavaPlugin
 {
-    private static JavaPlugin cibpPlugin;
-
-    public static JavaPlugin getPlugin()
-    {
-        return cibpPlugin;
-    }
+    public static Plugin instance;
 
     @Override
     public void onLoad()
     {
-        ConfigurationSerialization.registerClass(Border.class);
+        ConfigurationSerialization.registerClass(RectBorder.class);
+        ConfigurationSerialization.registerClass(CircBorder.class);
     }
 
     @Override
@@ -43,17 +44,15 @@ public class Plugin extends JavaPlugin
     @Override
     public void onEnable()
     {
-        Plugin.cibpPlugin = this;
-
-        BorderManager borderManager = new BorderManager();
+        Plugin.instance = this;
 
         // create listeners
-        PlayerMoveListener playerMoveListener = new PlayerMoveListener(borderManager);
-        PlayerTeleportListener playerTeleportListener = new PlayerTeleportListener(borderManager);
+        PlayerMoveListener playerMoveListener = new PlayerMoveListener();
+        PlayerTeleportListener playerTeleportListener = new PlayerTeleportListener();
         PlayerLoginListener playerLoginListener = new PlayerLoginListener();
 
         // commands
-        Commands commandExecutor = new Commands(borderManager);
+        Commands commandExecutor = new Commands();
         getCommand("cibp").setExecutor(commandExecutor);
 
         // register listeners

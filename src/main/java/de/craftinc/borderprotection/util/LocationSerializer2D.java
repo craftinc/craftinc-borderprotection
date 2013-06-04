@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Tobias Ottenweller
+    Copyright (C) 2013  Tobias Ottenweller, Paul Schulze
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -14,8 +14,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program (LGPLv3).  If not, see <http://www.gnu.org/licenses/>.
 */
-package de.craftinc.borderprotection;
+package de.craftinc.borderprotection.util;
 
+import de.craftinc.borderprotection.Plugin;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -26,17 +27,16 @@ import java.util.Map;
 /**
  * NOTE: We do not care about yaw and pitch for gate locations. So we won't serialize them.
  */
-public class LocationSerializer
+public class LocationSerializer2D
 {
     protected static String worldKey = "world";
     protected static String xKey     = "x";
-    protected static String yKey     = "y";
     protected static String zKey     = "z";
 
 
     protected static World getWorld( String name ) throws Exception
     {
-        World world = Plugin.getPlugin().getServer().getWorld(name);
+        World world = Plugin.instance.getServer().getWorld(name);
 
         if ( world == null )
         {
@@ -58,7 +58,6 @@ public class LocationSerializer
 
         serializedLocation.put(worldKey, l.getWorld().getName());
         serializedLocation.put(xKey, l.getX());
-        serializedLocation.put(yKey, l.getY());
         serializedLocation.put(zKey, l.getZ());
 
         return serializedLocation;
@@ -77,20 +76,14 @@ public class LocationSerializer
 
         // verbose loading of coordinates (they might be Double or Integer)
         Object objX = map.get(xKey);
-        Object objY = map.get(yKey);
         Object objZ = map.get(zKey);
 
-        double x, y, z;
+        double x, z;
 
         if ( objX instanceof Integer )
             x = (double) (Integer) objX;
         else
             x = (Double) objX;
-
-        if ( objY instanceof Integer )
-            y = (double) (Integer) objY;
-        else
-            y = (Double) objY;
 
         if ( objZ instanceof Integer )
             z = (double) (Integer) objZ;
@@ -98,6 +91,6 @@ public class LocationSerializer
             z = (Double) objZ;
 
 
-        return new Location(w, x, y, z);
+        return new Location(w, x, 0d, z);
     }
 }
