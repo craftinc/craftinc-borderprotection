@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPT_DIR=$(readlink -f $(dirname "$0"))
+SCRIPT_DIR="$(dirname "$0")"
 
 BUKKIT_DIR="$SCRIPT_DIR/../bukkit-testserver"
 PLUGIN_DIR="$SCRIPT_DIR/../bukkit-testserver/plugins"
