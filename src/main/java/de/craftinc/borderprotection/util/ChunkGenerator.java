@@ -16,25 +16,21 @@
 */
 package de.craftinc.borderprotection.util;
 
-import de.craftinc.borderprotection.Messages;
 import de.craftinc.borderprotection.Plugin;
 import de.craftinc.borderprotection.borders.Border;
-import net.minecraft.server.v1_5_R3.ChunkProviderServer; // NOTE: this will break with any new Bukkit/Minecraft version!
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_5_R3.CraftWorld; // NOTE: this will break with any new Bukkit/Minecraft version!
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class ChunkGenerator
 {
-    protected static Map<World, Integer[]> chunkGenerationStatus = new HashMap<World, Integer[]>();
+    protected static HashMap<World, Integer[]> chunkGenerationStatus = new HashMap<World, Integer[]>();
     protected static boolean isPaused = true;
-    protected static ArrayList<Chunk> loadedChunks = new ArrayList<Chunk>();
+
+    public static long waitTicks = 5; // TODO: make adjustable via config file
 
     public static void pause()
     {
@@ -49,7 +45,7 @@ public class ChunkGenerator
 
             for (World w : chunkGenerationStatus.keySet())
             {
-                loadNextChunk(w);
+                slowLoadNextChunk(w);
             }
         }
     }
@@ -107,74 +103,28 @@ public class ChunkGenerator
         return true;
     }
 
-    public static void handleChunkLoad(Chunk c, boolean isPopulated)
+    protected static void slowLoadNextChunk(World w)
     {
-        if (c == null)
+        if (w == null)
         {
-            throw new IllegalArgumentException("Chunk 'c' must not be null!");
+            throw new IllegalArgumentException("World 'w' must not be null!");
         }
 
-        if (isPaused)
-        {
-            return;
-        }
-
-        World w = c.getWorld();
-        Integer[] currentGenerationChunk = chunkGenerationStatus.get(w);
-
-        if ((currentGenerationChunk != null) && c.getX() == currentGenerationChunk[0] && c.getZ() == currentGenerationChunk[1])
-        {
-            if (!isPopulated)
-            {
-//                Plugin.instance.getLogger().info("Trying to get the chunk to get populated");
-
-                ChunkProviderServer cps = ((CraftWorld) w).getHandle().chunkProviderServer;
-                cps.chunkProvider.getOrCreateChunk(c.getX(), c.getZ());
-
-
-            }
-
-            DelayedCall delayedCall = new DelayedCall();
-            delayedCall.w = w;
-            Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.instance, delayedCall, 10L);
-
-
-//                loadNextChunk(w);
-        }
+        DelayedCall delayedCall = new DelayedCall();
+        delayedCall.w = w;
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.instance, delayedCall, waitTicks);
     }
 
-//    protected static void loadSurroundingChunks(int x, int z, World w)
-//    {
-//        int radius = 2;
-//
-//        for (int i=-radius; i<radius; i++)
-//        {
-//            for (int j=-radius; j<radius; j++)
-//            {
-//                if (j == 0  && i == 0)
-//                {
-//                    continue;
-//                }
-//
-//                w.loadChunk(i+x, j+z, false);
-//            }
-//        }
-//    }
-//
-//    protected static void unloadLoadedChunks()
-//    {
-//        for (Chunk c : loadedChunks)
-//        {
-//            c.getWorld().unloadChunk(c);
-//        }
-//    }
-
-
     /**
-     * Will only load chunks inside the border of the given world. Will stop if no border exists.
+     * Will only load/generate the next chunks inside the border of the given world. Will stop if no border exists.
      */
     protected static void loadNextChunk(World w)
     {
+        if (w == null)
+        {
+            throw new IllegalArgumentException("World 'w' must not be null!");
+        }
+
         Border border = Border.getBorders().get(w);
 
         if (border == null)
@@ -197,15 +147,10 @@ public class ChunkGenerator
         int maxChunkX = Math.max(borderRect[0].getBlockX(), borderRect[1].getBlockX()) >> 4;
         int maxChunkZ = Math.max(borderRect[0].getBlockZ(), borderRect[1].getBlockZ()) >> 4;
 
-//        System.out.println("minChunkX: " + minChunkX);
-//        System.out.println("maxChunkX: " + maxChunkX);
-//        System.out.println("maxChunkZ: " + maxChunkZ);
-
         chunkX++;
 
         while (!chunkIsInsideBorder(chunkX, chunkZ, w, border)
-                && chunkZ <= maxChunkZ
-                /*&& !w.isChunkLoaded(chunkX, chunkZ)*/)
+                && chunkZ <= maxChunkZ)
         {
             chunkX++;
 
@@ -220,7 +165,11 @@ public class ChunkGenerator
         {
             chunkGenerationStatus.put(w, new Integer[]{chunkX, chunkZ});
             Plugin.instance.getLogger().info("Loading/Generating Chunk ( x=" + chunkX + " z=" + chunkZ + " world=" + w.getName() + " )");
-            w.loadChunk(chunkX, chunkZ, true);
+
+            Chunk chunk = w.getChunkAt(chunkX, chunkZ);
+            chunk.load(true);
+
+            slowLoadNextChunk(w);
         }
         else
         {

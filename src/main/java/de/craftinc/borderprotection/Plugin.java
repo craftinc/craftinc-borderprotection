@@ -49,7 +49,6 @@ public class Plugin extends JavaPlugin
         PlayerMoveListener playerMoveListener = new PlayerMoveListener();
         PlayerTeleportListener playerTeleportListener = new PlayerTeleportListener();
         PlayerLoginListener playerLoginListener = new PlayerLoginListener();
-        ChunkLoadingListener chunkLoadingListener = new ChunkLoadingListener();
         PlayerQuitListener playerQuitListener = new PlayerQuitListener();
 
         // commands
@@ -61,7 +60,6 @@ public class Plugin extends JavaPlugin
         pm.registerEvents(playerMoveListener, this);
         pm.registerEvents(playerTeleportListener, this);
         pm.registerEvents(playerLoginListener, this);
-        pm.registerEvents(chunkLoadingListener, this);
         pm.registerEvents(playerQuitListener, this);
     }
 }
