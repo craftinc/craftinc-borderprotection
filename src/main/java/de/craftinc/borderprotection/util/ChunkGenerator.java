@@ -16,11 +16,15 @@
 */
 package de.craftinc.borderprotection.util;
 
+import de.craftinc.borderprotection.Messages;
 import de.craftinc.borderprotection.Plugin;
 import de.craftinc.borderprotection.borders.Border;
+import net.minecraft.server.v1_5_R3.ChunkProviderServer; // NOTE: this will break with any new Bukkit/Minecraft version!
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_5_R3.CraftWorld; // NOTE: this will break with any new Bukkit/Minecraft version!
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,43 +126,48 @@ public class ChunkGenerator
         {
             if (!isPopulated)
             {
-                Plugin.instance.getLogger().info("Trying to get the chunk to get populated");
-//                loadSurroundingChunks(c.getX(), c.getZ(), w);
+//                Plugin.instance.getLogger().info("Trying to get the chunk to get populated");
+
+                ChunkProviderServer cps = ((CraftWorld) w).getHandle().chunkProviderServer;
+                cps.chunkProvider.getOrCreateChunk(c.getX(), c.getZ());
+
 
             }
-            else
-            {
-                unloadLoadedChunks();
-                loadNextChunk(c.getWorld());
-            }
+
+            DelayedCall delayedCall = new DelayedCall();
+            delayedCall.w = w;
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.instance, delayedCall, 10L);
+
+
+//                loadNextChunk(w);
         }
     }
 
-    protected static void loadSurroundingChunks(int x, int z, World w)
-    {
-        int radius = 2;
-
-        for (int i=-radius; i<radius; i++)
-        {
-            for (int j=-radius; j<radius; j++)
-            {
-                if (j == 0  && i == 0)
-                {
-                    continue;
-                }
-
-                w.loadChunk(i+x, j+z, false);
-            }
-        }
-    }
-
-    protected static void unloadLoadedChunks()
-    {
-        for (Chunk c : loadedChunks)
-        {
-            c.getWorld().unloadChunk(c);
-        }
-    }
+//    protected static void loadSurroundingChunks(int x, int z, World w)
+//    {
+//        int radius = 2;
+//
+//        for (int i=-radius; i<radius; i++)
+//        {
+//            for (int j=-radius; j<radius; j++)
+//            {
+//                if (j == 0  && i == 0)
+//                {
+//                    continue;
+//                }
+//
+//                w.loadChunk(i+x, j+z, false);
+//            }
+//        }
+//    }
+//
+//    protected static void unloadLoadedChunks()
+//    {
+//        for (Chunk c : loadedChunks)
+//        {
+//            c.getWorld().unloadChunk(c);
+//        }
+//    }
 
 
     /**
@@ -188,6 +197,10 @@ public class ChunkGenerator
         int maxChunkX = Math.max(borderRect[0].getBlockX(), borderRect[1].getBlockX()) >> 4;
         int maxChunkZ = Math.max(borderRect[0].getBlockZ(), borderRect[1].getBlockZ()) >> 4;
 
+//        System.out.println("minChunkX: " + minChunkX);
+//        System.out.println("maxChunkX: " + maxChunkX);
+//        System.out.println("maxChunkZ: " + maxChunkZ);
+
         chunkX++;
 
         while (!chunkIsInsideBorder(chunkX, chunkZ, w, border)
@@ -207,7 +220,6 @@ public class ChunkGenerator
         {
             chunkGenerationStatus.put(w, new Integer[]{chunkX, chunkZ});
             Plugin.instance.getLogger().info("Loading/Generating Chunk ( x=" + chunkX + " z=" + chunkZ + " world=" + w.getName() + " )");
-//            loadSurroundingChunks(chunkX, chunkZ, w);
             w.loadChunk(chunkX, chunkZ, true);
         }
         else
@@ -219,8 +231,18 @@ public class ChunkGenerator
 
     protected static boolean chunkIsInsideBorder(int x, int z, World w, Border b)
     {
-//        Location chunkLocation = new Location(w, (double)(x << 4), (double)100, (double)(z << 4));
-//        return b.checkBorder(chunkLocation) == null;
-        return true;
+        Location chunkLocation = new Location(w, (double)(x << 4), (double)100, (double)(z << 4));
+        return b.checkBorder(chunkLocation) == null;
+    }
+}
+
+
+class DelayedCall implements Runnable
+{
+    public World w;
+
+    @Override
+    public void run() {
+        ChunkGenerator.loadNextChunk(w);
     }
 }

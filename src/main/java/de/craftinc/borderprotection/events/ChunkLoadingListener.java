@@ -26,12 +26,14 @@ import org.bukkit.event.world.ChunkPopulateEvent;
 
 public class ChunkLoadingListener implements Listener
 {
-    @SuppressWarnings("unused")
-    @EventHandler(priority = EventPriority.NORMAL)
-    public void onChunkPopulate( ChunkPopulateEvent e )
-    {
-        ChunkGenerator.handleChunkLoad(e.getChunk(), true);
-    }
+//    @SuppressWarnings("unused")
+//    @EventHandler(priority = EventPriority.NORMAL)
+//    public void onChunkPopulate( ChunkPopulateEvent e )
+//    {
+//        System.out.println("populate: " + e.getChunk());
+//
+//        ChunkGenerator.handleChunkLoad(e.getChunk(), true);
+//    }
 
 
     @SuppressWarnings("unused")
