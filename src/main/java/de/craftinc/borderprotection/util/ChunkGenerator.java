@@ -164,6 +164,8 @@ public class ChunkGenerator
         if (chunkZ <= maxChunkZ)
         {
             chunkGenerationStatus.put(w, new Integer[]{chunkX, chunkZ});
+
+            // TODO: only display a message every 10s or so with a fake percentage number.
             Plugin.instance.getLogger().info("Loading/Generating Chunk ( x=" + chunkX + " z=" + chunkZ + " world=" + w.getName() + " )");
 
             Chunk chunk = w.getChunkAt(chunkX, chunkZ);
