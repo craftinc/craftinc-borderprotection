@@ -182,6 +182,7 @@ public class ChunkGenerator
 
     protected static boolean chunkIsInsideBorder(int x, int z, World w, Border b)
     {
+        // TODO: make the generation area a few blocks bigger then the actual size of border.
         Location chunkLocation = new Location(w, (double)(x << 4), (double)100, (double)(z << 4));
         return b.checkBorder(chunkLocation) == null;
     }
