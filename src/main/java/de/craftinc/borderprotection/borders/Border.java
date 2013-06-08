@@ -73,6 +73,12 @@ public abstract class Border
      */
     public abstract Location checkBorder( Location l );
 
+    /**
+     * Returns an array of two Location objects defining a rectangle bigger or at size of the border. There are no
+     * locations outside the rectangle which are inside the border.
+     */
+    public abstract Location[] getSurroundingRect();
+
     public Boolean isActive()
     {
         return isActive;

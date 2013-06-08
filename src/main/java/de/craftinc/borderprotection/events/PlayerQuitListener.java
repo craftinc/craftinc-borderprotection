@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze
+    Copyright (C) 2013  Paul Schulze, Tobias Ottenweller
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -14,29 +14,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-package de.craftinc.borderprotection.commands;
+package de.craftinc.borderprotection.events;
 
-import de.craftinc.borderprotection.Messages;
-import org.bukkit.command.CommandSender;
+import de.craftinc.borderprotection.Plugin;
+import de.craftinc.borderprotection.util.ChunkGenerator;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class HelpCommand  implements SubCommand
+public class PlayerQuitListener implements Listener
 {
-    @Override
-    public boolean execute(CommandSender sender, String[] parameters)
+    @SuppressWarnings("unused")
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerQuit( PlayerQuitEvent e )
     {
-        sender.sendMessage(Messages.helpGeneral);
-        return true;
-    }
-
-    @Override
-    public List<String> commandNames()
-    {
-        ArrayList<String> names = new ArrayList<String>();
-        names.add("help");
-
-        return names;
+        if (Plugin.instance.getServer().getOnlinePlayers().length == 1)
+        {
+            ChunkGenerator.resume();
+        }
     }
 }

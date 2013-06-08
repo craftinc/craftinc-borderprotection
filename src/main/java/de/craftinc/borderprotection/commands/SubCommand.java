@@ -26,15 +26,14 @@ public interface SubCommand
 {
     /**
      *
-     * @param sender will contain the command name at index 0.
-     * @param parameters
-     * @return
+     * @param sender The sender (player) who executed the command.
+     * @param parameters All parameters for executing this subcommand. Includes the subcommand name at index 0.
+     * @return Returns an boolean indicating if the subcommand got could be executed.
      */
     public boolean execute(CommandSender sender, String[] parameters);
 
     /**
-     *
-     * @return a list of names of the command. All strings should be lowercase!
+     * Returns a list of names of the command. All strings should be lowercase!
      */
     public List<String> commandNames();
 }

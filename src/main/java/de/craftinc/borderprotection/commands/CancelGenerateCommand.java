@@ -18,55 +18,35 @@ package de.craftinc.borderprotection.commands;
 
 
 import de.craftinc.borderprotection.Messages;
-import de.craftinc.borderprotection.borders.Border;
+import de.craftinc.borderprotection.util.ChunkGenerator;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OnOffCommand  implements SubCommand
+public class CancelGenerateCommand  implements SubCommand
 {
     @Override
     public boolean execute(CommandSender sender, String[] parameters)
     {
-        if ( !sender.hasPermission("craftinc.borderprotection.set") )
+        if ( !sender.hasPermission("craftinc.borderprotection.set") ) // TODO: a new/different permission?
         {
             sender.sendMessage(Messages.noPermissionSet);
             return false;
         }
 
         World world = ( (Player) sender ).getWorld();
-        Border border = Border.getBorders().get(world);
 
-        if ( border != null )
+        if (!ChunkGenerator.isGenerating(world))
         {
-            if ( parameters[0].equalsIgnoreCase("on") )
-            {
-                border.enable();
-                sender.sendMessage(Messages.borderEnabled);
-            }
-            else
-            {
-                border.disable();
-                sender.sendMessage(Messages.borderDisabled);
-            }
+            sender.sendMessage("nothing to cancel"); // TODO: put better message into Message class
         }
         else
         {
-            sender.sendMessage(Messages.borderInfoNoBorderSet);
-        }
-
-        // save the changed border
-        try
-        {
-            Border.saveBorders();
-        }
-        catch ( IOException e )
-        {
-            sender.sendMessage(Messages.borderEnableDisableException);
+            ChunkGenerator.cancelRender(world);
+            sender.sendMessage("generation canceled"); // TODO: put better message into Message class
         }
 
         return true;
@@ -76,8 +56,7 @@ public class OnOffCommand  implements SubCommand
     public List<String> commandNames()
     {
         ArrayList<String> names = new ArrayList<String>();
-        names.add("on");
-        names.add("off");
+        names.add("cancelgenerate");
 
         return names;
     }

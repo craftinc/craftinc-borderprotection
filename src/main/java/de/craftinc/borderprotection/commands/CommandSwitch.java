@@ -17,19 +17,11 @@
 package de.craftinc.borderprotection.commands;
 
 import de.craftinc.borderprotection.Messages;
-import de.craftinc.borderprotection.borders.Border;
-import de.craftinc.borderprotection.borders.CircBorder;
-import de.craftinc.borderprotection.borders.RectBorder;
-import de.craftinc.borderprotection.util.UpdateHelper;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +31,7 @@ public class CommandSwitch implements CommandExecutor
 
     public CommandSwitch()
     {
+        registerCommand(new CancelGenerateCommand());
         registerCommand(new CheckVersionCommand());
         registerCommand(new GenerateCommand());
         registerCommand(new GetCommand());

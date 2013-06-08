@@ -17,12 +17,15 @@
 package de.craftinc.borderprotection.commands;
 
 import de.craftinc.borderprotection.Messages;
+import de.craftinc.borderprotection.util.ChunkGenerator;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenerateCommand  implements SubCommand
+public class GenerateCommand implements SubCommand
 {
     @Override
     public boolean execute(CommandSender sender, String[] parameters)
@@ -33,9 +36,26 @@ public class GenerateCommand  implements SubCommand
             return false;
         }
 
-        // TODO: implement me!
+        World world = ( (Player) sender ).getWorld();
 
-        return false;
+        if (ChunkGenerator.isGenerating(world))
+        {
+            sender.sendMessage("already generating! will resume on logout"); // TODO: put better message into Message class
+        }
+        else
+        {
+            if (ChunkGenerator.generate(world))
+            {
+                sender.sendMessage("world marked for generation! will start on logout"); // TODO: put better message into Message class
+            }
+            else
+            {
+                sender.sendMessage("could not start generation. is there a border?"); // TODO: put better message into Message class
+            }
+
+        }
+
+        return true;
     }
 
     @Override

@@ -180,4 +180,10 @@ public class RectBorder extends Border implements ConfigurationSerializable
             }
         }
     }
+
+    @Override
+    public Location[] getSurroundingRect()
+    {
+        return new Location[]{ rectPoint1, rectPoint2 };
+    }
 }

@@ -18,6 +18,7 @@ package de.craftinc.borderprotection.events;
 
 import de.craftinc.borderprotection.Messages;
 import de.craftinc.borderprotection.Plugin;
+import de.craftinc.borderprotection.util.ChunkGenerator;
 import de.craftinc.borderprotection.util.UpdateHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -50,5 +51,8 @@ public class PlayerLoginListener implements Listener
                 }, 20L);
             }
         }
+
+        System.out.println("pausing generation");
+        ChunkGenerator.pause();
     }
 }

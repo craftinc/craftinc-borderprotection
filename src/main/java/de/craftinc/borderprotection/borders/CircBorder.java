@@ -120,4 +120,13 @@ public class CircBorder extends Border implements ConfigurationSerializable
 
         return newLocation;
     }
+
+    @Override
+    public Location[] getSurroundingRect()
+    {
+        Location l1 = new Location(center.getWorld(), center.getX()+radius, center.getY(), center.getX()+radius);
+        Location l2 = new Location(center.getWorld(), center.getX()-radius, center.getY(), center.getX()-radius);
+
+        return new Location[]{ l1, l2 };
+    }
 }

@@ -84,7 +84,8 @@ public class Messages
             ChatColor.WHITE + "Commands are always related to the current world." + NEWLINE +
             makeCmd("help", "shows this help") +
             makeCmd("get | info", "Shows information about the border.") +
-            makeCmd("generate", "Generate all chunks inside the border", "on | off") +
+            makeCmd("generate", "Generate all not existing chunks inside the border.") +
+            makeCmd("cancelgenerate", "Cancels the generation of chunks.") +
             makeCmd("on | off", "Enables/disables the border.") +
             makeCmd("set", "Square border with distance (d) from 0,0.", "r", "<d>") +
             makeCmd("set", "Rectangle defined by two points. Point=x,z.", "r", "<p1>", "<p2>") +

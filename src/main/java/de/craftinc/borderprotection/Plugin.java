@@ -19,9 +19,7 @@ package de.craftinc.borderprotection;
 import de.craftinc.borderprotection.borders.CircBorder;
 import de.craftinc.borderprotection.borders.RectBorder;
 import de.craftinc.borderprotection.commands.CommandSwitch;
-import de.craftinc.borderprotection.events.PlayerLoginListener;
-import de.craftinc.borderprotection.events.PlayerMoveListener;
-import de.craftinc.borderprotection.events.PlayerTeleportListener;
+import de.craftinc.borderprotection.events.*;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -51,6 +49,8 @@ public class Plugin extends JavaPlugin
         PlayerMoveListener playerMoveListener = new PlayerMoveListener();
         PlayerTeleportListener playerTeleportListener = new PlayerTeleportListener();
         PlayerLoginListener playerLoginListener = new PlayerLoginListener();
+        ChunkLoadingListener chunkLoadingListener = new ChunkLoadingListener();
+        PlayerQuitListener playerQuitListener = new PlayerQuitListener();
 
         // commands
         CommandSwitch commandExecutor = new CommandSwitch();
@@ -61,5 +61,7 @@ public class Plugin extends JavaPlugin
         pm.registerEvents(playerMoveListener, this);
         pm.registerEvents(playerTeleportListener, this);
         pm.registerEvents(playerLoginListener, this);
+        pm.registerEvents(chunkLoadingListener, this);
+        pm.registerEvents(playerQuitListener, this);
     }
 }
