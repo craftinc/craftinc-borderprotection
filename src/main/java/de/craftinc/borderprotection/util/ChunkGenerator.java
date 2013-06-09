@@ -31,6 +31,8 @@ public class ChunkGenerator
     protected static boolean isPaused = true;
 
     public static long waitTicks = 5; // TODO: make adjustable via config file
+    public static int batchGenerationSize = 5; //TODO: make adjustable via config file
+    public static int paddingChunksAroundBorder = 15; // TODO: make adjustable via config file
 
     public static void pause()
     {
@@ -92,8 +94,8 @@ public class ChunkGenerator
 
         Location[] borderRect = border.getSurroundingRect();
 
-        int firstChunkX = Math.min(borderRect[0].getBlockX(), borderRect[1].getBlockX()) >> 4;
-        int firstChunkZ = Math.min(borderRect[0].getBlockZ(), borderRect[1].getBlockZ()) >> 4;
+        int firstChunkX = (Math.min(borderRect[0].getBlockX(), borderRect[1].getBlockX()) >> 4) - paddingChunksAroundBorder;
+        int firstChunkZ = (Math.min(borderRect[0].getBlockZ(), borderRect[1].getBlockZ()) >> 4) - paddingChunksAroundBorder;
 
         firstChunkX--;
 
@@ -110,8 +112,15 @@ public class ChunkGenerator
             throw new IllegalArgumentException("World 'w' must not be null!");
         }
 
+        if (isPaused)
+        {
+            return;
+        }
+
         DelayedCall delayedCall = new DelayedCall();
         delayedCall.w = w;
+        delayedCall.batchGenerationSize = batchGenerationSize;
+
         Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.instance, delayedCall, waitTicks);
     }
 
@@ -143,9 +152,9 @@ public class ChunkGenerator
         int chunkZ = lastGeneratedChunk[1];
 
         Location[] borderRect = border.getSurroundingRect();
-        int minChunkX = Math.min(borderRect[0].getBlockX(), borderRect[1].getBlockX()) >> 4;
-        int maxChunkX = Math.max(borderRect[0].getBlockX(), borderRect[1].getBlockX()) >> 4;
-        int maxChunkZ = Math.max(borderRect[0].getBlockZ(), borderRect[1].getBlockZ()) >> 4;
+        int minChunkX = (Math.min(borderRect[0].getBlockX(), borderRect[1].getBlockX()) >> 4) - paddingChunksAroundBorder;
+        int maxChunkX = (Math.max(borderRect[0].getBlockX(), borderRect[1].getBlockX()) >> 4) + paddingChunksAroundBorder;
+        int maxChunkZ = (Math.max(borderRect[0].getBlockZ(), borderRect[1].getBlockZ()) >> 4) + paddingChunksAroundBorder;
 
         chunkX++;
 
@@ -170,8 +179,7 @@ public class ChunkGenerator
 
             Chunk chunk = w.getChunkAt(chunkX, chunkZ);
             chunk.load(true);
-
-            slowLoadNextChunk(w);
+            loadSurroundingChunks(chunkX, chunkZ, w); // this will get the server to generate trees, … inside the new chunk
         }
         else
         {
@@ -182,9 +190,41 @@ public class ChunkGenerator
 
     protected static boolean chunkIsInsideBorder(int x, int z, World w, Border b)
     {
-        // TODO: make the generation area a few blocks bigger then the actual size of border.
-        Location chunkLocation = new Location(w, (double)(x << 4), (double)100, (double)(z << 4));
+        // FIXME: the following code makes round border not so round!
+
+        double xLoc = (double)(x << 4);
+        double yLoc = 100.0;
+        double zLoc = (double)(z << 4);
+
+        Location center = b.getCenter();
+        double centerX = center.getX();
+        double centerZ = center.getZ();
+
+        double padding = paddingChunksAroundBorder << 4;
+
+        xLoc = centerX < xLoc ? xLoc-padding : xLoc+padding;
+        zLoc = centerZ < zLoc ? zLoc-padding : zLoc+padding;
+
+        Location chunkLocation = new Location(w, xLoc, yLoc, zLoc);
         return b.checkBorder(chunkLocation) == null;
+    }
+
+    protected static void loadSurroundingChunks(int x, int z, World w)
+    {
+        int radius = 1;
+
+        for (int i=-radius; i<radius; i++)
+        {
+            for (int j=-radius; j<radius; j++)
+            {
+                if (j == 0  && i == 0)
+                {
+                    continue;
+                }
+
+                w.loadChunk(i+x, j+z, false);
+            }
+        }
     }
 }
 
@@ -192,9 +232,16 @@ public class ChunkGenerator
 class DelayedCall implements Runnable
 {
     public World w;
+    public int batchGenerationSize;
 
     @Override
-    public void run() {
-        ChunkGenerator.loadNextChunk(w);
+    public void run()
+    {
+        for (int i=0; i<batchGenerationSize;i++)
+        {
+            ChunkGenerator.loadNextChunk(w);
+        }
+
+        ChunkGenerator.slowLoadNextChunk(w);
     }
 }
