@@ -21,6 +21,7 @@ import de.craftinc.borderprotection.Plugin;
 import de.craftinc.borderprotection.util.PlayerMovementUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.HashMap;
@@ -185,5 +186,16 @@ public class RectBorder extends Border implements ConfigurationSerializable
     public Location[] getSurroundingRect()
     {
         return new Location[]{ rectPoint1, rectPoint2 };
+    }
+
+    @Override
+    public Location getCenter()
+    {
+        World w = rectPoint1.getWorld();
+        double x = Math.abs(rectPoint1.getX() - rectPoint2.getX()) / 2.0 + Math.min(rectPoint1.getX(), rectPoint2.getX());
+        double y = rectPoint1.getY();
+        double z = Math.abs(rectPoint1.getZ() - rectPoint2.getZ()) / 2.0 + Math.min(rectPoint1.getZ(), rectPoint2.getZ());
+
+        return new Location(w, x, y, z);
     }
 }

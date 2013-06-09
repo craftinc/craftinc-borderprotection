@@ -79,6 +79,8 @@ public abstract class Border
      */
     public abstract Location[] getSurroundingRect();
 
+    public abstract Location getCenter();
+
     public Boolean isActive()
     {
         return isActive;

@@ -129,4 +129,10 @@ public class CircBorder extends Border implements ConfigurationSerializable
 
         return new Location[]{ l1, l2 };
     }
+
+    @Override
+    public Location getCenter()
+    {
+        return center;
+    }
 }
