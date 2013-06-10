@@ -21,7 +21,6 @@ import de.craftinc.borderprotection.Plugin;
 import de.craftinc.borderprotection.util.PlayerMovementUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.HashMap;
@@ -108,22 +107,16 @@ public class RectBorder extends Border implements ConfigurationSerializable
                ChatColor.YELLOW + "Point 2: " + ChatColor.WHITE + rectPoint2.getX() + "," + rectPoint2.getZ();
     }
 
-    /**
-     * Checks if the given location is inside the rectBorder rectangle. Returns null if yes, otherwise new coordinates.
-     *
-     * @param l location to check
-     * @return null if the player is inside, otherwise a new player location
-     */
     @Override
-    public Location checkBorder( Location l )
+    public Location checkBorder( Location l, double padding )
     {
         // New x and z: null by default
         Double[] newXZ = { null, null };
 
         // check if player is withing the X borders
-        newXZ[0] = _checkBorder(l.getX(), this.rectPoint1.getX(), this.rectPoint2.getX());
+        newXZ[0] = _checkBorder(l.getX(), this.rectPoint1.getX(), this.rectPoint2.getX(), padding);
         // check if player is withing the Z borders
-        newXZ[1] = _checkBorder(l.getZ(), this.rectPoint1.getZ(), this.rectPoint2.getZ());
+        newXZ[1] = _checkBorder(l.getZ(), this.rectPoint1.getZ(), this.rectPoint2.getZ(), padding);
 
         // Do nothing, if no new coordinates have been calculated.
         if ( newXZ[0] == null && newXZ[1] == null )
@@ -151,12 +144,13 @@ public class RectBorder extends Border implements ConfigurationSerializable
      * @param location part of the location coordinates
      * @param border1  one side of the rectangle
      * @param border2  opposite side of the rectangle
+     * @param padding  a padding (number of block) used to enlarge the border
      * @return null if the location is inside, otherwise a new location
      */
-    private static Double _checkBorder( double location, double border1, double border2 )
+    private static Double _checkBorder( double location, double border1, double border2, double padding )
     {
-        double bigBorder = Math.max(border1, border2);
-        double smallBorder = Math.min(border1, border2);
+        double bigBorder = Math.max(border1, border2) + padding;
+        double smallBorder = Math.min(border1, border2) - padding;
 
         // if location is between borders do nothing
         if ( location >= smallBorder && location <= bigBorder )
@@ -186,16 +180,5 @@ public class RectBorder extends Border implements ConfigurationSerializable
     public Location[] getSurroundingRect()
     {
         return new Location[]{ rectPoint1, rectPoint2 };
-    }
-
-    @Override
-    public Location getCenter()
-    {
-        World w = rectPoint1.getWorld();
-        double x = Math.abs(rectPoint1.getX() - rectPoint2.getX()) / 2.0 + Math.min(rectPoint1.getX(), rectPoint2.getX());
-        double y = rectPoint1.getY();
-        double z = Math.abs(rectPoint1.getZ() - rectPoint2.getZ()) / 2.0 + Math.min(rectPoint1.getZ(), rectPoint2.getZ());
-
-        return new Location(w, x, y, z);
     }
 }

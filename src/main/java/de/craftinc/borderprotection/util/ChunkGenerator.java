@@ -190,61 +190,14 @@ public class ChunkGenerator
 
     protected static boolean chunkIsInsideBorder(int x, int z, World w, Border b)
     {
-//        double xLoc = (double)(x << 4);
-//        double yLoc = 100.0;
-//        double yLoc = 0.0;
-//        double zLoc = (double)(z << 4);
-//
-//        Location center = b.getCenter();
-//        double centerX = center.getX();
-//        double centerZ = center.getZ();
-//
-//        double padding = paddingChunksAroundBorder << 4;
-//
-//        if (Math.abs(xLoc) < padding)
-//        {
-//            xLoc = centerX;
-//        }
-//        else
-//        {
-//            xLoc = centerX < xLoc ? xLoc-padding : xLoc+padding;
-//            xLoc = centerX < xLoc ? xLoc-padding : xLoc+padding;
-//        }
-//
-//        if (Math.abs(zLoc) < padding)
-//        {
-//            zLoc = centerZ;
-//        }
-//        else
-//        {
-//            zLoc = centerZ < zLoc ? zLoc-padding : zLoc+padding;
-//            zLoc = centerZ < zLoc ? zLoc-padding : zLoc+padding;
-//        }
-//
-//        Location chunkLocation = new Location(w, xLoc, yLoc, zLoc);
-//        return b.checkBorder(chunkLocation) == null;
-//
+        double xLoc = (double)(x << 4) + 8.0;
+        double yLoc = 0.0;
+        double zLoc = (double)(z << 4) + 8.0;
 
-        // make the location to check the length of 'paddingChunksAroundBorder' closer to center of the border
-        Location center = b.getCenter();
-        double vecX = center.getX() - (x << 4);
-        double vecZ = center.getZ() - (z << 4);
-        double length = Math.sqrt(vecX*vecX + vecZ*vecZ);
+        double padding = (double)(paddingChunksAroundBorder << 4);
+        Location l = new Location(w, xLoc, yLoc, zLoc);
 
-        double padding = paddingChunksAroundBorder << 4;
-
-        if (Math.abs(length) < padding)
-        {
-            vecX = vecZ = 0.0; // avoid 'crossing' the center of the border
-        }
-        else
-        {
-            vecX -= vecX / length * padding;
-            vecZ -= vecZ / length * padding;
-        }
-
-        Location locationMinusPadding = new Location(w, center.getX()+vecX, 0.0, center.getZ()+vecZ);
-        return b.checkBorder(locationMinusPadding) == null;
+        return b.checkBorder(l, padding) == null;
     }
 
     protected static void loadSurroundingChunks(int x, int z, World w)

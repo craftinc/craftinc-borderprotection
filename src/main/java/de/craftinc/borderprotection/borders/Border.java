@@ -71,15 +71,25 @@ public abstract class Border
      * @param l Location to check if inside the border
      * @return null if l is inside the border otherwise a new Location which is inside
      */
-    public abstract Location checkBorder( Location l );
+    public Location checkBorder( Location l )
+    {
+        return checkBorder(l, 0.0);
+    }
+
+    /**
+     * Checks if the given location is inside or outside the border. If it is outside a new location (inside the border)
+     * is returned, otherwise null. Applies padding to the border. (Simulates a larger border using padding.)
+     * @param l Location to check if inside the border
+     * @param padding number of Blocks of padding applied to the border.
+     * @return null if l is inside the border otherwise a new Location which is inside
+     */
+    public abstract Location checkBorder (Location l, double padding);
 
     /**
      * Returns an array of two Location objects defining a rectangle bigger or at size of the border. There are no
      * locations outside the rectangle which are inside the border.
      */
     public abstract Location[] getSurroundingRect();
-
-    public abstract Location getCenter();
 
     public Boolean isActive()
     {
@@ -105,6 +115,7 @@ public abstract class Border
         isActive = true;
     }
 
+    @SuppressWarnings("unused")
     public static void loadBorders()
     {
         bordersFileConf.getList(bordersKey);

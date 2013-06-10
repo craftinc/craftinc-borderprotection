@@ -93,13 +93,15 @@ public class CircBorder extends Border implements ConfigurationSerializable
     }
 
     @Override
-    public Location checkBorder( Location l )
+    public Location checkBorder( Location l, double padding )
     {
+        double paddedRadius = radius + padding;
+
         double distX = l.getX() - center.getX();
         double distZ = l.getZ() - center.getZ();
 
         double distanceFromCenterSquared = distX * distX + distZ * distZ;
-        double radiusSquared = radius * radius;
+        double radiusSquared = paddedRadius * paddedRadius;
 
         // inside the border
         if ( distanceFromCenterSquared <= radiusSquared )
@@ -108,7 +110,7 @@ public class CircBorder extends Border implements ConfigurationSerializable
         }
 
         // outside the border: it's ok to use square-root function here, because this only happens very few times
-        double ratio = radius / Math.sqrt(distanceFromCenterSquared);
+        double ratio = paddedRadius / Math.sqrt(distanceFromCenterSquared);
         double newX = center.getX() + ( ratio * distX );
         double newZ = center.getZ() + ( ratio * distZ );
 
@@ -128,11 +130,5 @@ public class CircBorder extends Border implements ConfigurationSerializable
         Location l2 = new Location(center.getWorld(), center.getX()-radius, center.getY(), center.getX()-radius);
 
         return new Location[]{ l1, l2 };
-    }
-
-    @Override
-    public Location getCenter()
-    {
-        return center;
     }
 }
