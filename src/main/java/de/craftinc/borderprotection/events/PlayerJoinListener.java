@@ -17,21 +17,19 @@
 package de.craftinc.borderprotection.events;
 
 import de.craftinc.borderprotection.Messages;
-import de.craftinc.borderprotection.Plugin;
 import de.craftinc.borderprotection.util.ChunkGenerator;
 import de.craftinc.borderprotection.util.UpdateHelper;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
-public class PlayerLoginListener implements Listener
+public class PlayerJoinListener implements Listener
 {
     @SuppressWarnings("unused")
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerLogin( PlayerLoginEvent e )
+    public void onPlayerLogin( PlayerJoinEvent e )
     {
         final Player player = e.getPlayer();
 
@@ -39,20 +37,12 @@ public class PlayerLoginListener implements Listener
         {
             if ( UpdateHelper.newVersionAvailable() )
             {
-                // Schedule a task which delays 20 ticks (1 second) and then sends a message to the player
-                Bukkit.getScheduler().scheduleSyncDelayedTask(Plugin.instance, new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        player.sendMessage(Messages.updateMessage(UpdateHelper.cachedLatestVersion,
-                                                                  UpdateHelper.getCurrentVersion()));
-                    }
-                }, 20L);
+                String updateMessage = Messages.updateMessage(UpdateHelper.cachedLatestVersion, UpdateHelper.getCurrentVersion());
+                e.setJoinMessage(e.getJoinMessage() + "\n" + updateMessage);
             }
         }
 
-        System.out.println("pausing generation");
+        System.out.println("pausing generation"); // TODO: send message to player with correct permission about current progress of the generation.
         ChunkGenerator.pause();
     }
 }

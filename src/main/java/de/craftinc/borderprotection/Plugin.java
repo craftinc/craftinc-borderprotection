@@ -48,7 +48,7 @@ public class Plugin extends JavaPlugin
         // create listeners
         PlayerMoveListener playerMoveListener = new PlayerMoveListener();
         PlayerTeleportListener playerTeleportListener = new PlayerTeleportListener();
-        PlayerLoginListener playerLoginListener = new PlayerLoginListener();
+        PlayerJoinListener playerJoinListener = new PlayerJoinListener();
         PlayerQuitListener playerQuitListener = new PlayerQuitListener();
 
         // commands
@@ -59,7 +59,7 @@ public class Plugin extends JavaPlugin
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(playerMoveListener, this);
         pm.registerEvents(playerTeleportListener, this);
-        pm.registerEvents(playerLoginListener, this);
+        pm.registerEvents(playerJoinListener, this);
         pm.registerEvents(playerQuitListener, this);
     }
 }
