@@ -42,7 +42,6 @@ public class PlayerJoinListener implements Listener
             }
         }
 
-        System.out.println("pausing generation"); // TODO: send message to player with correct permission about current progress of the generation.
         ChunkGenerator.pause();
     }
 }

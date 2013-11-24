@@ -23,12 +23,14 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class ChunkGenerator
 {
     protected static HashMap<World, Integer[]> chunkGenerationStatus = new HashMap<World, Integer[]>();
     protected static boolean isPaused = true;
+    protected static HashMap<World, Long> lastGenerationLogTime = new HashMap<World, Long>();
 
     public static long waitTicks = 5; // TODO: make adjustable via config file
     public static int batchGenerationSize = 5; //TODO: make adjustable via config file
@@ -151,10 +153,11 @@ public class ChunkGenerator
         int chunkX = lastGeneratedChunk[0];
         int chunkZ = lastGeneratedChunk[1];
 
-        Location[] borderRect = border.getSurroundingRect();
-        int minChunkX = (Math.min(borderRect[0].getBlockX(), borderRect[1].getBlockX()) >> 4) - paddingChunksAroundBorder;
-        int maxChunkX = (Math.max(borderRect[0].getBlockX(), borderRect[1].getBlockX()) >> 4) + paddingChunksAroundBorder;
-        int maxChunkZ = (Math.max(borderRect[0].getBlockZ(), borderRect[1].getBlockZ()) >> 4) + paddingChunksAroundBorder;
+        final Location[] borderRect = border.getSurroundingRect();
+        final int minChunkX = (Math.min(borderRect[0].getBlockX(), borderRect[1].getBlockX()) >> 4) - paddingChunksAroundBorder;
+        final int minChunkZ = (Math.min(borderRect[0].getBlockZ(), borderRect[1].getBlockZ()) >> 4) - paddingChunksAroundBorder;
+        final int maxChunkX = (Math.max(borderRect[0].getBlockX(), borderRect[1].getBlockX()) >> 4) + paddingChunksAroundBorder;
+        final int maxChunkZ = (Math.max(borderRect[0].getBlockZ(), borderRect[1].getBlockZ()) >> 4) + paddingChunksAroundBorder;
 
         chunkX++;
 
@@ -174,12 +177,11 @@ public class ChunkGenerator
         {
             chunkGenerationStatus.put(w, new Integer[]{chunkX, chunkZ});
 
-            // TODO: only display a message every 10s or so with a fake percentage number.
-            Plugin.instance.getLogger().info("Loading/Generating Chunk ( x=" + chunkX + " z=" + chunkZ + " world=" + w.getName() + " )");
-
             Chunk chunk = w.getChunkAt(chunkX, chunkZ);
             chunk.load(true);
             loadSurroundingChunks(chunkX, chunkZ, w); // this will get the server to generate trees, … inside the new chunk
+
+            logProgress(minChunkX, maxChunkX, minChunkZ, maxChunkZ, chunkX, chunkZ, w);
         }
         else
         {
@@ -215,6 +217,42 @@ public class ChunkGenerator
 
                 w.loadChunk(i+x, j+z, false);
             }
+        }
+    }
+
+    protected static void logProgress(int minChunkX, int maxChunkX, int minChunkZ, int maxChunkZ, int chunkX, int chunkZ, World world)
+    {
+        final Long now = Calendar.getInstance().getTimeInMillis();
+        final Long lastLogTime = lastGenerationLogTime.get(world);
+
+        if (lastLogTime == null || (now - lastLogTime) > 30000) {
+            lastGenerationLogTime.put(world, now);
+
+            final int numXChunks, offsetX;
+            if (((maxChunkX > 0) && (minChunkX > 0)) || ((maxChunkX < 0) && (minChunkX < 0)))
+            {
+                numXChunks = minChunkX * maxChunkX;
+                offsetX = 0;
+            }
+            else {
+                numXChunks = Math.abs(minChunkX) + maxChunkX;
+                offsetX = Math.abs(minChunkX);
+            }
+
+            final int numZChunks, offsetZ;
+            if (((maxChunkZ > 0) && (minChunkZ > 0)) || ((maxChunkZ < 0) && (minChunkZ < 0)))
+            {
+                numZChunks = minChunkZ * maxChunkZ;
+                offsetZ = 0;
+            }
+            else {
+                numZChunks = Math.abs(minChunkZ) + maxChunkZ;
+                offsetZ = Math.abs(minChunkZ);
+            }
+
+            final int totalNumChunks = numXChunks * numZChunks;
+            final int currentChunk = ((offsetZ+chunkZ) * numXChunks) + offsetX+chunkX;
+            Plugin.instance.getLogger().info("Generation progress: " + currentChunk + "/" + totalNumChunks + " Chunks in World " + world.getName());
         }
     }
 }
