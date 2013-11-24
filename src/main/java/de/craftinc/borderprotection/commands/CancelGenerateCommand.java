@@ -31,7 +31,7 @@ public class CancelGenerateCommand  implements SubCommand
     @Override
     public boolean execute(CommandSender sender, String[] parameters)
     {
-        if ( !sender.hasPermission("craftinc.borderprotection.set") ) // TODO: a new/different permission?
+        if ( !sender.hasPermission("craftinc.borderprotection.generate") )
         {
             sender.sendMessage(Messages.noPermissionSet);
             return false;
@@ -41,12 +41,12 @@ public class CancelGenerateCommand  implements SubCommand
 
         if (!ChunkGenerator.isGenerating(world))
         {
-            sender.sendMessage("nothing to cancel"); // TODO: put better message into Message class
+            sender.sendMessage(Messages.generationNotCanceled);
         }
         else
         {
             ChunkGenerator.cancelRender(world);
-            sender.sendMessage("generation canceled"); // TODO: put better message into Message class
+            sender.sendMessage(Messages.generationCanceled);
         }
 
         return true;

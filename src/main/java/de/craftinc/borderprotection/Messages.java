@@ -137,6 +137,21 @@ public class Messages
             ChatColor.RED +
             "Error: Could not save border state on server. After the next reload this border state will be lost!";
 
+    public static String generationCanceled =
+            ChatColor.GREEN + "World generation canceled!";
+
+    public static String generationNotCanceled =
+            ChatColor.RED + "No world generation happening. Cannot cancel!";
+
+    public static String generationAlreadyInProgress =
+            ChatColor.YELLOW + "World generation is already in progress. It will continue after all players are logged out.";
+
+    public static String generationStarted =
+            ChatColor.GREEN + "World generation will start after all players left the server.";
+
+    public static String generationCouldNotBeStarted =
+            ChatColor.RED + "Could not start world generation! Is there a border?";
+
     public static String updateMessage( String newVersion, String curVersion )
     {
         return ChatColor.RED + pluginName + ": New version available!" + NEWLINE +

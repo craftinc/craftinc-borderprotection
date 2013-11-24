@@ -36,3 +36,6 @@ permissions:
   craftinc.borderprotection.update:
     default: op
     description: Allows to get notified on login, when a new update is available.
+  craftinc.borderprotection.generate:
+    default: op
+    description: Allows to generate the complete world inside the border.

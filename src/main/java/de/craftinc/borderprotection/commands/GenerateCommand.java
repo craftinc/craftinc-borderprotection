@@ -30,7 +30,7 @@ public class GenerateCommand implements SubCommand
     @Override
     public boolean execute(CommandSender sender, String[] parameters)
     {
-        if ( !sender.hasPermission("craftinc.borderprotection.set") ) // TODO: a new/different permission?
+        if ( !sender.hasPermission("craftinc.borderprotection.generate") )
         {
             sender.sendMessage(Messages.noPermissionSet);
             return false;
@@ -40,19 +40,18 @@ public class GenerateCommand implements SubCommand
 
         if (ChunkGenerator.isGenerating(world))
         {
-            sender.sendMessage("already generating! will resume on logout"); // TODO: put better message into Message class
+            sender.sendMessage(Messages.generationAlreadyInProgress);
         }
         else
         {
             if (ChunkGenerator.generate(world))
             {
-                sender.sendMessage("world marked for generation! will start on logout"); // TODO: put better message into Message class
+                sender.sendMessage(Messages.generationStarted);
             }
             else
             {
-                sender.sendMessage("could not start generation. is there a border?"); // TODO: put better message into Message class
+                sender.sendMessage(Messages.generationCouldNotBeStarted);
             }
-
         }
 
         return true;
