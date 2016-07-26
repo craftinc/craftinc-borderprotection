@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze, Tobias Ottenweller
+    Copyright (C) 2016  Paul Schulze, Tobias Ottenweller
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@
 */
 package de.craftinc.borderprotection.borders;
 
-import de.craftinc.borderprotection.util.LocationSerializer2D;
 import de.craftinc.borderprotection.Plugin;
+import de.craftinc.borderprotection.util.LocationSerializer2D;
 import de.craftinc.borderprotection.util.PlayerMovementUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -31,8 +31,8 @@ public class RectBorder extends Border implements ConfigurationSerializable
     private Location rectPoint1;
     private Location rectPoint2;
 
-    private static String rectPoint1Name = "p1";
-    private static String rectPoint2Name = "p2";
+    private static final String rectPoint1Name = "p1";
+    private static final String rectPoint2Name = "p2";
 
     @SuppressWarnings("unchecked unused")
     public RectBorder( Map<String, Object> map )
@@ -179,6 +179,6 @@ public class RectBorder extends Border implements ConfigurationSerializable
     @Override
     public Location[] getSurroundingRect()
     {
-        return new Location[]{ rectPoint1, rectPoint2 };
+        return new Location[] { rectPoint1, rectPoint2 };
     }
 }

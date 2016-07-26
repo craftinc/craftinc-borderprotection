@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze, Tobias Ottenweller
+    Copyright (C) 2016  Paul Schulze, Tobias Ottenweller
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,10 @@ package de.craftinc.borderprotection;
 import de.craftinc.borderprotection.borders.CircBorder;
 import de.craftinc.borderprotection.borders.RectBorder;
 import de.craftinc.borderprotection.commands.CommandSwitch;
-import de.craftinc.borderprotection.events.*;
+import de.craftinc.borderprotection.events.PlayerJoinListener;
+import de.craftinc.borderprotection.events.PlayerMoveListener;
+import de.craftinc.borderprotection.events.PlayerQuitListener;
+import de.craftinc.borderprotection.events.PlayerTeleportListener;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;

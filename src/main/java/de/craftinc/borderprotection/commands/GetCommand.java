@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze
+    Copyright (C) 2016  Paul Schulze
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,10 +25,9 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetCommand  implements SubCommand
+class GetCommand implements SubCommand
 {
-    @Override
-    public boolean execute(CommandSender sender, String[] parameters)
+    public boolean execute( CommandSender sender, String[] parameters )
     {
         World world = ( (Player) sender ).getWorld();
 
@@ -45,7 +44,6 @@ public class GetCommand  implements SubCommand
         return true;
     }
 
-    @Override
     public List<String> commandNames()
     {
         ArrayList<String> names = new ArrayList<String>();

@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze, Tobias Ottenweller
+    Copyright (C) 2016  Paul Schulze, Tobias Ottenweller
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,8 +16,8 @@
 */
 package de.craftinc.borderprotection.borders;
 
-import de.craftinc.borderprotection.util.LocationSerializer2D;
 import de.craftinc.borderprotection.Plugin;
+import de.craftinc.borderprotection.util.LocationSerializer2D;
 import de.craftinc.borderprotection.util.PlayerMovementUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -31,8 +31,8 @@ public class CircBorder extends Border implements ConfigurationSerializable
     private Double   radius;
     private Location center;
 
-    private static String centerKey = "center";
-    private static String radiusKey = "radius";
+    private static final String centerKey = "center";
+    private static final String radiusKey = "radius";
 
     @SuppressWarnings("unchecked unused")
     public CircBorder( Map<String, Object> map )
@@ -126,9 +126,9 @@ public class CircBorder extends Border implements ConfigurationSerializable
     @Override
     public Location[] getSurroundingRect()
     {
-        Location l1 = new Location(center.getWorld(), center.getX()+radius, center.getY(), center.getX()+radius);
-        Location l2 = new Location(center.getWorld(), center.getX()-radius, center.getY(), center.getX()-radius);
+        Location l1 = new Location(center.getWorld(), center.getX() + radius, center.getY(), center.getX() + radius);
+        Location l2 = new Location(center.getWorld(), center.getX() - radius, center.getY(), center.getX() - radius);
 
-        return new Location[]{ l1, l2 };
+        return new Location[] { l1, l2 };
     }
 }

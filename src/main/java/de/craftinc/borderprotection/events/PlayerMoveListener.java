@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze, Tobias Ottenweller
+    Copyright (C) 2016  Paul Schulze, Tobias Ottenweller
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ public class PlayerMoveListener implements Listener
 
 
     @SuppressWarnings("unused")
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerMove( PlayerMoveEvent e )
     {
         // do nothing if the event is already cancelled

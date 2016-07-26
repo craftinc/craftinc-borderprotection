@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze
+    Copyright (C) 2016  Paul Schulze
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,10 +30,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SetCommand  implements SubCommand
+class SetCommand implements SubCommand
 {
-    @Override
-    public boolean execute(CommandSender sender, String[] parameters)
+    public boolean execute( CommandSender sender, String[] parameters )
     {
         if ( !( parameters.length == 3 || parameters.length == 4 ) )
         {
@@ -60,7 +59,7 @@ public class SetCommand  implements SubCommand
                 if ( parameters[1].equalsIgnoreCase("r") )
                 {
                     newBorder = new RectBorder(new Location(world, distance, 0, distance),
-                            new Location(world, -distance, 0, -distance));
+                                               new Location(world, -distance, 0, -distance));
                 }
                 // circ border
                 else if ( parameters[1].equalsIgnoreCase("c") )
@@ -96,7 +95,7 @@ public class SetCommand  implements SubCommand
                     Double p2Z = Double.parseDouble(parameters[3].split(",")[1]);
 
                     newBorder = new RectBorder(new Location(world, p1X, 0, p1Z),
-                            new Location(world, p2X, 0, p2Z));
+                                               new Location(world, p2X, 0, p2Z));
                 }
                 // circ border
                 else if ( parameters[1].equalsIgnoreCase("c") )
@@ -133,7 +132,6 @@ public class SetCommand  implements SubCommand
         return true;
     }
 
-    @Override
     public List<String> commandNames()
     {
         ArrayList<String> names = new ArrayList<String>();

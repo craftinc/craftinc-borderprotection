@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze, Tobias Ottenweller
+    Copyright (C) 2016  Paul Schulze, Tobias Ottenweller
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,12 +32,12 @@ public abstract class Border
 {
     private static final String dataFileName = "borders.yml";
 
-    protected Boolean isActive;
+    private Boolean isActive;
 
-    protected static final String isActiveKey = "enabled";
-    protected static final String bordersKey  = "borders";
+    private static final String isActiveKey = "enabled";
+    private static final String bordersKey  = "borders";
 
-    protected static final HashMap<World, Border> borders = new HashMap<World, Border>();
+    static final HashMap<World, Border> borders = new HashMap<World, Border>();
 
     private static final File              bordersFile     = new File(Plugin.instance.getDataFolder(), dataFileName);
     private static final FileConfiguration bordersFileConf = YamlConfiguration.loadConfiguration(bordersFile);
@@ -46,7 +46,7 @@ public abstract class Border
      * The buffer in blocks which applies when a player is teleported inside the border. 0 means the player
      * will be teleported directly to the border.
      */
-    public static final double buffer = 0.5;
+    static final double buffer = 0.5;
 
     public static HashMap<World, Border> getBorders()
     {
@@ -79,11 +79,12 @@ public abstract class Border
     /**
      * Checks if the given location is inside or outside the border. If it is outside a new location (inside the border)
      * is returned, otherwise null. Applies padding to the border. (Simulates a larger border using padding.)
-     * @param l Location to check if inside the border
+     *
+     * @param l       Location to check if inside the border
      * @param padding number of Blocks of padding applied to the border.
      * @return null if l is inside the border otherwise a new Location which is inside
      */
-    public abstract Location checkBorder (Location l, double padding);
+    public abstract Location checkBorder( Location l, double padding );
 
     /**
      * Returns an array of two Location objects defining a rectangle bigger or at size of the border. There are no
@@ -96,7 +97,7 @@ public abstract class Border
         return isActive;
     }
 
-    public Border( Map<String, Object> map )
+    Border( Map<String, Object> map )
     {
         try
         {
@@ -109,7 +110,7 @@ public abstract class Border
         }
     }
 
-    public Border()
+    Border()
     {
         // new borders are enabled by default
         isActive = true;
@@ -137,7 +138,7 @@ public abstract class Border
         isActive = false;
     }
 
-    protected void serialize( Map<String, Object> map )
+    void serialize( Map<String, Object> map )
     {
         map.put(isActiveKey, isActive);
     }

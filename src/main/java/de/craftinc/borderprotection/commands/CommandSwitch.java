@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze, Tobias Ottenweller
+    Copyright (C) 2016  Paul Schulze, Tobias Ottenweller
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,12 +27,11 @@ import java.util.Map;
 
 public class CommandSwitch implements CommandExecutor
 {
-    protected Map<String, SubCommand> subCommandsMap = new HashMap<String, SubCommand>();
+    private final Map<String, SubCommand> subCommandsMap = new HashMap<String, SubCommand>();
 
     public CommandSwitch()
     {
         registerCommand(new CancelGenerateCommand());
-        registerCommand(new CheckVersionCommand());
         registerCommand(new GenerateCommand());
         registerCommand(new GetCommand());
         registerCommand(new HelpCommand());
@@ -40,15 +39,14 @@ public class CommandSwitch implements CommandExecutor
         registerCommand(new SetCommand());
     }
 
-    protected void registerCommand(SubCommand command)
+    private void registerCommand( SubCommand command )
     {
-        for (String commandName : command.commandNames())
+        for ( String commandName : command.commandNames() )
         {
             subCommandsMap.put(commandName, command);
         }
     }
 
-    @Override
     public boolean onCommand( CommandSender sender, Command command, String label, String[] args )
     {
         // Check if command comes from a player.
@@ -63,18 +61,18 @@ public class CommandSwitch implements CommandExecutor
         // command for all actions
         if ( command.getName().equalsIgnoreCase("cibp") )
         {
-            if (args.length > 0)
+            if ( args.length > 0 )
             {
                 String lowerCaseSubCommandName = args[0].toLowerCase();
                 SubCommand subCommand = subCommandsMap.get(lowerCaseSubCommandName);
 
-                if (subCommand != null)
+                if ( subCommand != null )
                 {
                     success = subCommand.execute(sender, args);
                 }
             }
 
-            if (!success)
+            if ( !success )
             {
                 subCommandsMap.get("help").execute(sender, args);
             }

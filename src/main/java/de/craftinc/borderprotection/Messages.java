@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze, Tobias Ottenweller
+    Copyright (C) 2016  Paul Schulze, Tobias Ottenweller
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -65,21 +65,21 @@ public class Messages
         return sb.toString();
     }
 
-    private static String borderExplanation =
+    private static final String borderExplanation =
             "One day the holy mods and administrators will expand the border. It is then your mission to explore " +
             "strange new worlds, to seek out new life and new civilizations, to boldly go where no one has gone before.";
 
-    public static String borderMessage =
+    public static final String borderMessage =
             ChatColor.YELLOW + "Sorry Dude! " +
             ChatColor.WHITE + "This is the border... the final frontier! " + borderExplanation + NEWLINE +
             makeCmd("/cibp get", "shows the borders of the current world");
 
-    public static String borderTeleportMessage =
+    public static final String borderTeleportMessage =
             ChatColor.YELLOW + "Sorry Dude! " +
             ChatColor.WHITE + "You cannot teleport outside the border. " + borderExplanation + NEWLINE +
             makeCmd("/cibp get", "shows the borders of the current world");
 
-    public static String helpGeneral =
+    public static final String helpGeneral =
             ChatColor.GREEN + pluginName + " - Usage:" + NEWLINE +
             ChatColor.WHITE + "Commands are always related to the current world." + NEWLINE +
             makeCmd("help", "shows this help") +
@@ -90,15 +90,14 @@ public class Messages
             makeCmd("set", "Square border with distance (d) from 0,0.", "r", "<d>") +
             makeCmd("set", "Rectangle defined by two points. Point=x,z.", "r", "<p1>", "<p2>") +
             makeCmd("set", "Circle border with radius from 0,0.", "c", "<radius>") +
-            makeCmd("set", "Circle defined by center and radius. Center=x,z.", "c", "<c>", "<r>") +
-            makeCmd("checkversion", "Checks for a newer version.");
+            makeCmd("set", "Circle defined by center and radius. Center=x,z.", "c", "<c>", "<r>");
 
-    public static String borderCreationSuccessful
+    public static final String borderCreationSuccessful
             = ChatColor.YELLOW + "New border was set " +
               ChatColor.GREEN + "successfully" +
               ChatColor.YELLOW + "!";
 
-    public static String commandIssuedByNonPlayer
+    public static final String commandIssuedByNonPlayer
             = ChatColor.RED + "Only a player can use " + pluginName + " commands!";
 
     public static String borderInfo( String worldName, Border border )
@@ -115,55 +114,40 @@ public class Messages
                ChatColor.WHITE + "Border is " + borderEnabled + ChatColor.WHITE + ".";
     }
 
-    public static String borderInfoNoBorderSet =
+    public static final String borderInfoNoBorderSet =
             ChatColor.YELLOW + "No border in this world.";
 
-    public static String noPermissionSet =
+    public static final String noPermissionSet =
             ChatColor.RED + "Sorry, you don't have permission to change the border.";
 
-    public static String noPermissionCheckversion =
-            ChatColor.RED + "Sorry, you don't have permission to check for new versions.";
-
-    public static String borderEnabled =
+    public static final String borderEnabled =
             ChatColor.YELLOW + "Border enabled.";
 
-    public static String borderDisabled =
+    public static final String borderDisabled =
             ChatColor.YELLOW + "Border disabled.";
 
-    public static String borderSaveException =
+    public static final String borderSaveException =
             ChatColor.RED + "Error: Could not save border on server. After the next reload this border will be lost!";
 
-    public static String borderEnableDisableException =
+    public static final String borderEnableDisableException =
             ChatColor.RED +
             "Error: Could not save border state on server. After the next reload this border state will be lost!";
 
-    public static String generationCanceled =
+    public static final String generationCanceled =
             ChatColor.GREEN + "World generation canceled!";
 
-    public static String generationNotCanceled =
+    public static final String generationNotCanceled =
             ChatColor.RED + "No world generation happening. Cannot cancel!";
 
-    public static String generationAlreadyInProgress =
-            ChatColor.YELLOW + "World generation is already in progress. It will continue after all players are logged out.";
+    public static final String generationAlreadyInProgress =
+            ChatColor.YELLOW +
+            "World generation is already in progress. It will continue after all players are logged out.";
 
-    public static String generationStarted =
+    public static final String generationStarted =
             ChatColor.GREEN + "World generation will start after all players left the server.";
 
-    public static String generationCouldNotBeStarted =
+    public static final String generationCouldNotBeStarted =
             ChatColor.RED + "Could not start world generation! Is there a border?";
-
-    public static String updateMessage( String newVersion, String curVersion )
-    {
-        return ChatColor.RED + pluginName + ": New version available!" + NEWLINE +
-               ChatColor.YELLOW + "Current version: " + ChatColor.WHITE + curVersion + NEWLINE +
-               ChatColor.YELLOW + "New version: " + ChatColor.WHITE + newVersion + NEWLINE +
-               ChatColor.YELLOW + "Please visit:" + NEWLINE +
-               ChatColor.AQUA + "http://dev.bukkit.org/bukkit-mods/craftinc-borderprotection" + NEWLINE +
-               ChatColor.YELLOW + "to get the latest version!";
-    }
-
-    public static String noUpdateAvailable =
-            ChatColor.YELLOW + "No updates available.";
 
     /**
      * Display a message to a player and then wait for timeout seconds before displaying it again.
@@ -190,8 +174,8 @@ public class Messages
             {
                 lastMessage.put(player.getName(), new HashMap<String, Long>()
                 {{
-                        put(message, now);
-                    }});
+                    put(message, now);
+                }});
             }
             else
             {

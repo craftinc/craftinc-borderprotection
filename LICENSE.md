@@ -5,6 +5,6 @@ full text of GPLv3 can be found in the file "GPLv3"
 
 
 # LGPLv3
-* src/main/java/de/craftinc/borderprotection/LocationSerializer.java
+* src/main/java/de/craftinc/borderprotection/util/LocationSerializer2D.java
 
 full text of LGPLv3 can be found in the file "LGPLv3"

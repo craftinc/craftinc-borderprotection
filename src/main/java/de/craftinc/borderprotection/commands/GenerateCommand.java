@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze
+    Copyright (C) 2016  Paul Schulze
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -25,10 +25,9 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GenerateCommand implements SubCommand
+class GenerateCommand implements SubCommand
 {
-    @Override
-    public boolean execute(CommandSender sender, String[] parameters)
+    public boolean execute( CommandSender sender, String[] parameters )
     {
         if ( !sender.hasPermission("craftinc.borderprotection.generate") )
         {
@@ -38,13 +37,13 @@ public class GenerateCommand implements SubCommand
 
         World world = ( (Player) sender ).getWorld();
 
-        if (ChunkGenerator.isGenerating(world))
+        if ( ChunkGenerator.isGenerating(world) )
         {
             sender.sendMessage(Messages.generationAlreadyInProgress);
         }
         else
         {
-            if (ChunkGenerator.generate(world))
+            if ( ChunkGenerator.generate(world) )
             {
                 sender.sendMessage(Messages.generationStarted);
             }
@@ -57,7 +56,6 @@ public class GenerateCommand implements SubCommand
         return true;
     }
 
-    @Override
     public List<String> commandNames()
     {
         ArrayList<String> names = new ArrayList<String>();

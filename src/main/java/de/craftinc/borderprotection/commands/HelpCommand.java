@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze
+    Copyright (C) 2016  Paul Schulze
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,16 +22,14 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HelpCommand  implements SubCommand
+public class HelpCommand implements SubCommand
 {
-    @Override
-    public boolean execute(CommandSender sender, String[] parameters)
+    public boolean execute( CommandSender sender, String[] parameters )
     {
         sender.sendMessage(Messages.helpGeneral);
         return true;
     }
 
-    @Override
     public List<String> commandNames()
     {
         ArrayList<String> names = new ArrayList<String>();

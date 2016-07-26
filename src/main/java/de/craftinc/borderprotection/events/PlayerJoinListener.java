@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze
+    Copyright (C) 2016  Paul Schulze
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,10 +16,7 @@
 */
 package de.craftinc.borderprotection.events;
 
-import de.craftinc.borderprotection.Messages;
 import de.craftinc.borderprotection.util.ChunkGenerator;
-import de.craftinc.borderprotection.util.UpdateHelper;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -31,17 +28,6 @@ public class PlayerJoinListener implements Listener
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerLogin( PlayerJoinEvent e )
     {
-        final Player player = e.getPlayer();
-
-        if ( e.getPlayer().hasPermission("craftinc.borderprotection.update") )
-        {
-            if ( UpdateHelper.newVersionAvailable() )
-            {
-                String updateMessage = Messages.updateMessage(UpdateHelper.cachedLatestVersion, UpdateHelper.getCurrentVersion());
-                e.setJoinMessage(e.getJoinMessage() + "\n" + updateMessage);
-            }
-        }
-
         ChunkGenerator.pause();
     }
 }

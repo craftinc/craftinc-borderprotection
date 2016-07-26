@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze, Tobias Ottenweller
+    Copyright (C) 2016  Paul Schulze, Tobias Ottenweller
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ public class PlayerQuitListener implements Listener
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerQuit( PlayerQuitEvent e )
     {
-        if (Plugin.instance.getServer().getOnlinePlayers().length == 1)
+        if ( Plugin.instance.getServer().getOnlinePlayers().size() == 1 )
         {
             ChunkGenerator.resume();
         }

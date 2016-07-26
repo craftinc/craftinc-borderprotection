@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Tobias Ottenweller, Paul Schulze
+    Copyright (C) 2016  Tobias Ottenweller, Paul Schulze
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
@@ -24,17 +24,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-/**
- * NOTE: We do not care about yaw and pitch for gate locations. So we won't serialize them.
- */
 public class LocationSerializer2D
 {
-    protected static String worldKey = "world";
-    protected static String xKey     = "x";
-    protected static String zKey     = "z";
+    private static final String worldKey = "world";
+    private static final String xKey     = "x";
+    private static final String zKey     = "z";
 
 
-    protected static World getWorld( String name ) throws Exception
+    private static World getWorld( String name ) throws Exception
     {
         World world = Plugin.instance.getServer().getWorld(name);
 

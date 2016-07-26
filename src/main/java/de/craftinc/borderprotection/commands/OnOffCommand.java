@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze
+    Copyright (C) 2016  Paul Schulze
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,10 +27,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OnOffCommand  implements SubCommand
+class OnOffCommand implements SubCommand
 {
-    @Override
-    public boolean execute(CommandSender sender, String[] parameters)
+    public boolean execute( CommandSender sender, String[] parameters )
     {
         if ( !sender.hasPermission("craftinc.borderprotection.set") )
         {
@@ -72,7 +71,6 @@ public class OnOffCommand  implements SubCommand
         return true;
     }
 
-    @Override
     public List<String> commandNames()
     {
         ArrayList<String> names = new ArrayList<String>();

@@ -1,5 +1,5 @@
 /*  Craft Inc. BorderProtection
-    Copyright (C) 2013  Paul Schulze
+    Copyright (C) 2016  Paul Schulze
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,18 +22,17 @@ import org.bukkit.command.CommandSender;
 import java.util.List;
 
 
-public interface SubCommand
+interface SubCommand
 {
     /**
-     *
-     * @param sender The sender (player) who executed the command.
+     * @param sender     The sender (player) who executed the command.
      * @param parameters All parameters for executing this subcommand. Includes the subcommand name at index 0.
      * @return Returns an boolean indicating if the subcommand got could be executed.
      */
-    public boolean execute(CommandSender sender, String[] parameters);
+    boolean execute( CommandSender sender, String[] parameters );
 
     /**
      * Returns a list of names of the command. All strings should be lowercase!
      */
-    public List<String> commandNames();
+    List<String> commandNames();
 }

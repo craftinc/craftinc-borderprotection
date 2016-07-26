@@ -1,5 +1,5 @@
 #    Craft Inc. BorderProtection
-#    Copyright (C) 2013  Paul Schulze, Tobias Ottenweller
+#    Copyright (C) 2016  Paul Schulze, Tobias Ottenweller
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -17,9 +17,9 @@
 name: ${project.name}
 main: de.craftinc.borderprotection.Plugin
 version: ${project.version}
-softdepend: [Multiverse-Core]
+softdepend: []
 authors: [ddidderr, mice_on_drugs]
-website: http://www.craftinc.de/plugins/borderprotection
+website: https://www.craftinc.de/plugins/borderprotection
 
 
 commands:
@@ -33,9 +33,6 @@ permissions:
   craftinc.borderprotection.ignoreborders:
     default: false
     description: Allows to be everywhere on the map (ignoring the borders).
-  craftinc.borderprotection.update:
-    default: op
-    description: Allows to get notified on login, when a new update is available.
   craftinc.borderprotection.generate:
     default: op
     description: Allows to generate the complete world inside the border.
