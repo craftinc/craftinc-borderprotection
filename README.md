@@ -2,7 +2,7 @@
 
 A border protection plugin for bukkit. All players (except those with ignoreborders permission) cannot go beyond the border.
 
-Read the [full user guide](http://www.craftinc.de/border-protection/) for more information.
+Read the [full user guide](https://www.craftinc.comff.net/border-protection/) for more information.
 
 ## License
 
